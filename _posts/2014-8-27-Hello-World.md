@@ -13,20 +13,6 @@ And so is this:
 
 This is a [link](http://www.columbia.edu/cu/psychology/vpvaughns/index.html)
 
-Let's generate a table:
-
-<table>
-	<tr>
-		<td>A</td>
-		<td>B</td>
-		<td>C</td>
-	</tr>
-	<tr>
-		<td>1</td>
-		<td>2</td>
-		<td>3</td>
-	</tr>
-</table>
 
 A big header
 ==============
@@ -79,6 +65,23 @@ And so is this
 And this
 
 --------------------
+
+Table:
+
+Let's generate a table:
+
+<table>
+	<tr>
+		<td>A</td>
+		<td>B</td>
+		<td>C</td>
+	</tr>
+	<tr>
+		<td>1</td>
+		<td>2</td>
+		<td>3</td>
+	</tr>
+</table>
 
 Finally, sometimes we wish to add *emphasis*.  And every once in a while **extra emphasis**
 
