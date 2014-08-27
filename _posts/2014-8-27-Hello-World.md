@@ -35,8 +35,10 @@ A smaller header
 -----------------
 
 # Atx head 1
-## Atx head 2
-### Atx head 3
+
+## Atx head 2 ##
+
+### Atx head 3 ###
 
 Back to plain text.  Some riddles:
 
