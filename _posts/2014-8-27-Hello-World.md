@@ -13,7 +13,6 @@ And so is this:
 
 This is a [link](http://www.columbia.edu/cu/psychology/vpvaughns/index.html)
 
-
 A big header
 ==============
 
