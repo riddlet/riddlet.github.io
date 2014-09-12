@@ -1,0 +1,10 @@
+---
+layout: post
+title: Collaborative Writing
+---
+What do you use when collaborating on manuscripts?  Do you just pass .doc files back and forth and deal with the headache of merging multiple versions?  Do you get everyone to buy into a googledoc based solution?  A colleague told me recently that he deals with .doc files and just makes it super clear whose plate it is on at any one time.  This seems like it will obviously slow down the writing process (someone always seems to be swamped with work), but it removes the headache of dealing with duelling file versions.  
+
+I bring it up because I had a beautifully formatted LaTeX document, but no collaborators who used LaTeX.  I then had to go to the trouble of converting it to a format everyone was happy with.  Microsoft Word to the rescue.  I tried using [pandoc](http://johnmacfarlane.net/pandoc/) to do the conversion, but had some real issues.  At the end of the day, I realized that this was not exactly a problem I've been having to solve on a regular basis, so ended up doing a whole bunch of copy-pasting with some manual edits where necessary.  It wasn't fun, it isn't scalable, but it got the job done.
+
+Regardless of the file format, though, we in the social sciences need to latch on to the idea of using collaborative tools similar to git.  The machinery of science has [long trended](http://www.nlm.nih.gov/bsd/authors1.html) toward becoming more distributed, and I seriously doubt this will change anytime soon.  This means that there's more chefs in the kitchen, which necessitates solutions that allow us to keep track of our work.  The broader social science community needs to jump on this before we're left behind.  The solutions exist, but a bit of work is needed to encourage use.  If I'm the only one who chooses to use version control and some kind of editor which works on multiple systems and ideally allows simple embedding of code, then it offers me zero advantage over just working with a word doc and passing around r code and data files and so forth.
+
