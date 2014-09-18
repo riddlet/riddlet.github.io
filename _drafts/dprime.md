@@ -1,0 +1,54 @@
+---
+layout: post
+title: dprime
+---
+
+I wrote a ton of r code during grad school.  Unfortunately, it wasn't until the last year of the degree that I really started organizing it systematically and putting in comments so a human could read it (including the future me).  So, most of it is an unholy mess.  But it did the trick.
+
+I've been working on a paper using some of my dissertation data and a commenter asked me to provide some additional analyses.  In going back through this code, there's a lot of spots where I recognize that I could have done something much more cleanly with a different method.  For example, every time I wanted to compute some signal detection theory statistics (e.g. d' or C), I went through a lot of the same steps for different subsets of data.  I basically rewrote the code to do this every time.  
+
+Aside from being annoying to run, it also opens up many more possible places in which an error might creep in that could effect the final analysis.  A much better approach is to write a function that carries out all these steps for any number of combinations you might be interested in.  Despite my best googling, I never really found a function that did exactly what I wanted.  So, to help with streamlining the analyses requested by my colleague, I wrote a little function.  It seems to work well enough for the situations I'm throwing at it.  It takes as input a vector of signal and a vector of response.  One can optionally provide subject id labels and conditions.  It returns a data frame with the hit rate, false alarm rate, dprime, and criterion scores.  If one provides subject ids and conditions, it will return the same figures for each individual, at each level of the condition.  Let me know if it doesn't work for you.  I'd be happy to help edit or troubleshoot.
+
+```r
+## dprime
+# this is a function which takes as input a vector of signal (1=present, 0=absent),
+# a vector of response (1=present, 0=absent), and two optional vectors of experimental
+# units (e.g. subjects), and conditions over which to do the computations.
+#
+# It returns a dataframe containing hit rate, false alarm rate, d', and criterion 
+# values for each experimental unit and each condition.
+
+dprime <- function(response, signal, units = NULL, conditions = NULL){
+  if(is.null(units)){
+    tmp.units <- rep(1, length(response))
+    unit.labels <- 1
+  }
+  else {
+    tmp.units <- units
+    unit.labels <- names(table(units))
+  }
+  if(is.null(conditions)){
+    tmp.conditions <- rep(1, length(response))
+    condition.labels <- 1
+  }
+  else {
+    tmp.conditions <- conditions
+    condition.labels <- names(table(conditions))
+  }
+  tmp<-table(signal, response, factor(tmp.units, levels=1:max(tmp.units)), tmp.conditions)
+  tmp[tmp==0] <- .01
+  tp <- tmp[2,2,,]/(tmp[2,2,,]+tmp[1,2,,])
+  fa <- tmp[2,1,,]/(tmp[2,1,,]+tmp[1,1,,])
+  dprime <- qnorm(fa) - qnorm(tp)
+  c <- -.5*(qnorm(tp) + qnorm(fa))
+  units <- as.numeric(unlist(dimnames(tp)[[1]]))
+  
+  df<-data.frame('unit' = rep(unit.labels, length(condition.labels)),
+                 'hit.rate' = c(tp), 
+                 'false.alarm.rate' = c(fa), 
+                 'dprime' = c(dprime), 
+                 'criterion' = c(c), 
+                 'condition' = rep(condition.labels, each=length(unit.labels))
+  )
+}
+```
