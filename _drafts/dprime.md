@@ -19,6 +19,8 @@ Aside from being annoying to run, it also opens up many more possible places in 
 # values for each experimental unit and each condition.
 
 dprime <- function(response, signal, units = NULL, conditions = NULL){
+  
+  #Checks for specification of units & conditions.  Assigns arbitrary values if not specified
   if(is.null(units)){
     tmp.units <- rep(1, length(response))
     unit.labels <- 1
@@ -35,13 +37,15 @@ dprime <- function(response, signal, units = NULL, conditions = NULL){
     tmp.conditions <- conditions
     condition.labels <- names(table(conditions))
   }
+  
+  #Create table(s) of observations
   tmp<-table(signal, response, factor(tmp.units, levels=1:max(tmp.units)), tmp.conditions)
+  #replace zeros to ensure no dividing by zero
   tmp[tmp==0] <- .01
-  tp <- tmp[2,2,,]/(tmp[2,2,,]+tmp[1,2,,])
-  fa <- tmp[2,1,,]/(tmp[2,1,,]+tmp[1,1,,])
-  dprime <- qnorm(fa) - qnorm(tp)
-  c <- -.5*(qnorm(tp) + qnorm(fa))
-  units <- as.numeric(unlist(dimnames(tp)[[1]]))
+  tp <- tmp[2,2,,]/(tmp[2,2,,]+tmp[1,2,,]) #hits
+  fa <- tmp[2,1,,]/(tmp[2,1,,]+tmp[1,1,,]) #false alarms
+  dprime <- qnorm(fa) - qnorm(tp) #dprime
+  c <- -.5*(qnorm(tp) + qnorm(fa)) #c
   
   df<-data.frame('unit' = rep(unit.labels, length(condition.labels)),
                  'hit.rate' = c(tp), 
