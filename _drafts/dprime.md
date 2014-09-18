@@ -39,13 +39,13 @@ dprime <- function(response, signal, units = NULL, conditions = NULL){
   }
   
   #Create table(s) of observations
-  tmp<-table(signal, response, factor(tmp.units, levels=1:max(tmp.units)), tmp.conditions)
+  tmp<-table(response, signal, factor(tmp.units), tmp.conditions)
   #replace zeros to ensure no dividing by zero
   tmp[tmp==0] <- .01
   tp <- tmp[2,2,,]/(tmp[2,2,,]+tmp[1,2,,]) #hits
   fa <- tmp[2,1,,]/(tmp[2,1,,]+tmp[1,1,,]) #false alarms
   dprime <- qnorm(fa) - qnorm(tp) #dprime
-  c <- -.5*(qnorm(tp) + qnorm(fa)) #c
+  c <- -.5*((qnorm(tp) + qnorm(fa))) #c
   
   df<-data.frame('unit' = rep(unit.labels, length(condition.labels)),
                  'hit.rate' = c(tp), 
