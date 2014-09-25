@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: Powerful versus Functional
 title: Test
 ---
 
@@ -13,6 +13,6 @@ For instance, let’s say two scientists are interested in using some code to co
 
 Scientist B, on the other hand, elects to simply write some code that works for the immediate problem.  It takes the files he has on hand and turns them into a data structure he’s looking for.  It probably won’t work for anyone else’s needs without a good deal of modification.  The time he could have spent streamlining his code, he instead spends writing a paper on the insights he found, or on starting a new project.
 
-While I’m well aware that setting up dichotomies like these is frequently misleading, I think they can be illustrative as well.  Here, we see different goals at play between our two scientists.  Scientist A is strongly oriented toward making a product which can be shared with others in order to benefit the community.  Scientist B, on the other hand, is oriented more toward findings insights in the data and then sharing these insights with the rest of his research community.  This isn’t meant to say that one of these is inherently better than the other, or that it is impossible to have some mixture of these extremes.  Rather, I’m only pointing out that spending time making powerful code will not always be in the best interest of everyone.
+While I’m well aware that setting up dichotomies like these is frequently misleading, I think they can be illustrative as well.  This example demonstrates different goals at play between our two scientists.  Scientist A is strongly oriented toward making a product which can be shared with others in order to benefit the community.  Scientist B, on the other hand, is oriented more toward findings insights in the data and then sharing these insights with the rest of his research community.  This isn’t meant to say that one of these is inherently better than the other, or that it is impossible to have some mixture of these extremes.  Rather, I’m only pointing out that spending time making powerful code will not always be in the best interest of everyone.
 
-This week, I’ve shifted my approach to go from making something that’s powerful, flexible, and efficient to something that will work for my purposes.  I need to find insights in data and communicate these insights to my collaborators, funders, and the broader research community.  Any time I spend trying to make something powerful (which requires a set of skills which, to be frank, I’m sorely lacking) takes away from time I could spend on discovery and communication.
+This week, I’ve shifted my approach to go from making something that’s powerful, flexible, and efficient to something that will work for my purposes.  I need to find insights in data and communicate these insights to my collaborators and the broader research community.  Any time I spend trying to make something powerful (which requires a set of skills which, to be frank, is not really in my wheelhouse) takes away from time I could spend on discovery and communication.
