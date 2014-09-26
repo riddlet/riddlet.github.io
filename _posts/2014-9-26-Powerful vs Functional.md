@@ -1,6 +1,6 @@
 ---
-layout: Powerful versus Functional
-title: Test
+layout: post
+title: Powerful vs Functional
 ---
 
 I’ve spent a bit of time this week thinking about strategies for writing code.
