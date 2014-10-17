@@ -1,4 +1,7 @@
-
+---
+layout: post
+title: Disciplinary Trends
+---
 I have recently been thinking about how a discipline changes across the years.
 Watching such changes over the course of a long career must be simultaneously
 bewildering and exciting.  Give a long-enough timeframe, it is easy to pick the
@@ -23,7 +26,7 @@ It turns out that Scopus has a pretty good web interface which minimizes the
 hassle of retrieving this type of data.  Searching for some term will lead you
 to a page that looks like this:
 
-![Scopus search results for Psychology](/Scopus_results.png)
+![Scopus search results for Psychology](/images/2014_10_17/Scopus_results.png)
 
 Looking to the top, we see a very welcome button: *Analyze search results*.
 Yes, I'll have one of those, please!  Following that takes you to a page which
@@ -114,8 +117,7 @@ dataframe with our old dataframe, joining them on the columns for Year and Term.
 Because I love speaking in grammer of graphics, we use python's ggplot.  I tried
 doing this with matplotlib for a while, but just couldn't get the plot that I
 wanted without what seemed like way too many lines of code.  Also, we're not
-using the 'Total #' term (filtered using <code>df_2[df_2.TERM != 'Total
-#']</code>.  This is due to the fact that we're plotting proportions of the
+using the 'Total #' term (filtered using <code>df_2[df_2.TERM != 'Total #']</code>.  This is due to the fact that we're plotting proportions of the
 total, which means this is just a flat line at 1.
 
 
@@ -123,13 +125,9 @@ total, which means this is just a flat line at 1.
     p + geom_line() + facet_wrap('TERM') + theme_bw() + ggtitle('Figure 1')
 
 
-![png](Publication%20counts-Copy0_files/Publication%20counts-Copy0_11_0.png)
+![Figure 1](/images/2014_10_17/Figure1.png)
 
 
-
-
-
-    <ggplot: (282818521)>
 
 
 
@@ -142,13 +140,9 @@ between 1990 and 2000.
     p + geom_line() + facet_wrap('TERM') + theme_bw() + ggtitle('Figure 2')
 
 
-![png](Publication%20counts-Copy0_files/Publication%20counts-Copy0_13_0.png)
+![Figure 2](/images/2014_10_17/Figure2.png)
 
 
-
-
-
-    <ggplot: (291334965)>
 
 
 
@@ -169,13 +163,9 @@ check, I plotted the total number of papers returned below.
     p + geom_line() + theme_bw() + ggtitle('Figure 3')
 
 
-![png](Publication%20counts-Copy0_files/Publication%20counts-Copy0_15_0.png)
+![Figure 3](/images/2014_10_17/Figure3.png)
 
 
-
-
-
-    <ggplot: (295649429)>
 
 
 
@@ -189,13 +179,10 @@ And once again, let's zoom in
     p + geom_line() + theme_bw() + ggtitle('Figure 4')
 
 
-![png](Publication%20counts-Copy0_files/Publication%20counts-Copy0_17_0.png)
+![Figure 4](/images/2014_10_17/Figure4.png)
 
 
 
-
-
-    <ggplot: (295615921)>
 
 
 
