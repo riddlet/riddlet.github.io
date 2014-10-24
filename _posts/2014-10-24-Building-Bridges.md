@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Test
+title: The Difficulties of Breaking Through Disciplinary Boundaries
 ---
 
 For this week, I’ve spent a lot of time thinking about the best way to build a bridge between two fields - each with their own separate methodologies, terminologies, interests, and philosophies.  As an early project of the post doc, I’m putting effort into trying to write a review paper of sorts.  The idea is that I’ll highlight what psychologists can gain from NLP and what NLP researchers can gain from psychology.  What this means on a more nuts-and-boltsy level is that I’m trying to think of variables which meet two criteria:
