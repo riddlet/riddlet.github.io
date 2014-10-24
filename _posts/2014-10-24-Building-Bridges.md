@@ -15,9 +15,8 @@ With an aim toward filling a third criteria as well:
 
 From a distance, this seemed like a simple enough task.  Get a bunch of variables (especially ones relevant to values affirmation) -> eliminate those which are too abstract to be present in text.  Et Voila!  Done!
 
-However, my ignorance was quickly exposed.  In particular, I do not know enough about text, language, and NLP to know what to look for regarding point 2.  For instance, believing that the use of first person pronouns vs 3rd person pronouns might be psychologically interesting and meaningful (as well as important for values-affirmation) is straightforward.  Also, this could be easily spotted in text!  Heck, we can even go a bit more complicated than that.  We might be interested in how an individual makes attributions.  This has a pretty straightforward text representation:  
-
-- <font color = '#FFD441'>Actor </font>did some event<font color = '#584CD5'> because</font> <font color = '#FFB441'>reason.</font>
+However, my ignorance was quickly exposed.  In particular, I do not know enough about text, language, and NLP to know what to look for regarding point 2.  For instance, believing that the use of first person pronouns vs 3rd person pronouns might be psychologically interesting and meaningful (as well as important for values-affirmation) is straightforward.  Also, this could be easily spotted in text!  Heck, we can even go a bit more complicated than that.  We might be interested in how an individual makes attributions.  This has a pretty straightforward text representation:<br>  
+<font color = '#FFD441'>Actor </font color>did some event<font color = '#584CD5'> because</font> <font color = '#FFB441'>reason.</font>
 
 So, if we’re looking for attributions, we can try to determine the identity of the <font color = '#FFD441'>actor</font> (coreference resolution), look for use of the word <font color = '#584CD5'>because</font> and then look at the <font color = '#FFB441'>reason</font>.  Depending on what we find in the text for <font color = '#FFB441'>reason</font>, we may realize that the pronouns used there indicate internal/external attributions (e.g. because I vs. because he vs. because it).  This is a bit fancier, but still straightforward.
 
