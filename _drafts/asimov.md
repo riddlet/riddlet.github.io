@@ -1,0 +1,81 @@
+---
+layout: post
+title: 3 things Asimov got right about creativity, and one thing he didn't
+---
+**Warning:  Paywalls.  So many paywalls**
+
+I recently discovered [this](http://www.technologyreview.com/view/531911/isaac-asimov-mulls-how-do-people-get-new-ideas/) nice little essay from Isaac Asimov.  I don't need to tell you that it's a good read, because, Asimov.  It's worth reading just for it's own sake.  However, I was especially struck by how spot-on most of his ideas were, psychologically speaking.  To illustrate, I'm stealing what seems to be the most typical way of presenting information on the internet, and giving you a list.
+
+**1.  Despite the prevailing popular wisdom that creativity is at odds with rules and structure, Asimov gets that this isn't quite right.**  
+
+In reference to how Darwin and Wallace each independently came up with the idea of evolution by natural selection, he wrote:
+
+------------------------
+>Obviously, then, what is needed is not only people with a good background in a particular field, but also people capable of >making a connection between item 1 and item 2 which might not ordinarily seem connected.
+------------------------
+
+Also:
+
+------------------------
+>Consequently, the person who is most likely to get new ideas is a person of good background in the field of interest and >one who is unconventional in his habits. (To be a crackpot is not, however, enough in itself.)
+------------------------
+
+That is, to have a creative insight, one needs to have knowledge of the components of the problem itself.  In other words, even if I could manage to make a saxophone play something resembling a note, I'm not going to be the next Ornette Coleman because I have only a vague sense of how music works.  This would be true even if I was physically able to produce the same kinds of riffs that a great sax player can.  In order to create something great, one needs a good grasp of the relevant subject areas.  This has been [supported](http://www.tandfonline.com/doi/pdf/10.1207/S15326934CRJ1402_4#.VEfNVIvF8vk) by a [number](http://www.nbu.bg/cogs/events/2004/materials/Necka/creativity_and_knowledge.pdf) of [papers](http://www.psy.cmu.edu/faculty/klahr/kands9.pdf).
+
+**2.  Creativity suffers when thought occurs in a social context, rather than at in relative isolation.**
+
+or, brainstorming sessions are almost never a good idea.  Asimov writes:
+
+------------------------
+>My feeling is that as far as creativity is concerned, isolation is required. 
+------------------------
+
+Bingo.  There are all kinds of problems that crop up when thinking through something as part of a group which lead to losses in creativity.  Don't misunderstand - people [love](http://psp.sagepub.com/content/19/1/78.short) working in groups.  It allows for downward social comparisons (i.e. *my ideas are better than hers*), and lets us take credit for more than we've done (i.e. *that was partially my idea*). However, it isn't so good for generating new, creative ideas.
+
+Why is this?  Asimov goes on, even more insightfully:
+
+------------------------
+>The presence of others can only inhibit this process, since creation is embarrassing. For every new good idea you have, there are a hundred, ten thousand foolish ones, which you naturally do not care to display.
+------------------------
+
+Oh, if I had a taco for every dumb idea I've had....
+
+And indeed, this is one such mechanism leading to the reduction in effectiveness.  Individuals don't want to look stupid.  When you tell people that their ideas will be evaluated (as happens when discussing ideas in a group), they tend to demonstrate [less creativity](http://psycnet.apa.org/journals/psp/37/2/221/) than they might otherwise (though, as always, the full story is a bit [more complicated](http://www.sciencedirect.com/science/article/pii/S0749597800929182)).  Of course, this isn't the only reason - [social loafing](http://en.wikipedia.org/wiki/Social_loafing) plays a role too.  [Here's](http://www.tandfonline.com/doi/abs/10.1207/s15324834basp1201_1#.VEf-wovF8vk) a nice meta-analysis to dig into if you're interested.
+
+But, sometimes we need to work in groups.  In which case,
+
+**3.  Minimizing the social-evaluative pressures should be paramount.**
+
+------------------------
+>First and foremost, there must be ease, relaxation, and a general sense of permissiveness. The world in general disapproves of creativity, and to be creative in public is particularly bad. Even to speculate in public is rather worrisome. The individuals must, therefore, have the feeling that the others won’t object.
+
+>If a single individual present is unsympathetic to the foolishness that would be bound to go on at such a session, the others would freeze. The unsympathetic individual may be a gold mine of information, but the harm he does will more than compensate for that. It seems necessary to me, then, that all people at a session be willing to sound foolish and listen to others sound foolish.
+------------------------
+
+Really, this point is just a demonstration that if you understand the mechanism of some process, you can then change it.  Asimov understood that one of the mechanisms responsible for reductions in creativity during group work is social evaluation.  Understanding this allows him to propose a method of changing the outcome - put people in a group, but relax the evaluative pressures.  Doing this ~~should~~ [does](http://www.sciencedirect.com/science/article/pii/S0749597800929182) lead to improvements in creativity.
+
+So, bravo, Asimov.  You knocked it out of the park.  Unfortunately, however, he gets something dreadfully wrong, too.  And it's littered throughout the essay.
+
+------------------------
+>what if the same earth-shaking idea occurred to two *men*
+------------------------
+
+------------------------
+>A person willing to fly in the face of reason, authority, and common sense must be a person of considerable self-assurance. Since *he* occurs only rarely, *he* must seem eccentric
+------------------------
+
+------------------------
+>The creative person is, in any case, continually working at it. *His* mind is shuffling his information at all times, even when *he* is not conscious of it. 
+------------------------
+
+(emphases are all mine)
+
+And on, and on, and on.
+
+**If you're gonna have a group work on some creative problem, you should be damn sure the group is diverse**.
+
+Asimov's language certainly reflects the era in which he was writing.  The total disregard for the idea that there might be women who have information that could be of use to group thinking is not surprising, considering women scientists were extraordinarily rare in the 1950's.  While things have gotten a bit better, we're still a long way from [complete parity](https://southwellchurches.nottingham.ac.uk/winset/documents/genderbiasesinresearchrecruitement.pdf) (figure 2 is especially shameful there).  This kind of stuff, by the way, isn't limited to gender.  Basically, if you're a straight, white male, you've got a substantial advantage.  This is especially true if you come from an affluent family.
+
+So why is this a problem (aside from just being unfair)?  Because it stifles creativity.  One useful function of groups is to expose people to information they do not individually have.  If you're going to make connections between diverse ideas, you need to know those diverse ideas, and a good way of ensuring representation of diverse ideas is by ensuring representation of diverse people.  The inclusion of people who think differently from you is a [*good thing*](http://pss.sagepub.com/content/15/8/507.short).  This is something we all struggle with - when was the last time you met a politically conservative psychologist?  And it's okay to struggle with it!  But that doesn't mean that it's okay to give in.
+
+I still love Isaac Asimov, and I still think his writing is great and his ideas are insightful - he's mostly right about creativity in that essay.  But his essay also makes plain that we should carefully consider how the biases we harbor hurt ourselves.
