@@ -69,5 +69,5 @@ Some great posts on the fantastic [Dynamic Ecology blog][ref5].
 [ref1]: <http://nsmn1.uh.edu/dgraur/niv/themostdangerousequation.pdf>
 [ref2]: <http://www.amstat.org/publications/jse/v12n2/melton.html>
 [ref3]: <http://people.westminstercollege.edu/faculty/ccline/courses/hon221/feynman.pdf>
-[ref4]: <http://laic.columbia.edu/author/1501198000/
+[ref4]: <http://laic.columbia.edu/author/1501198000/>
 [ref5]: <http://dynamicecology.wordpress.com/>
