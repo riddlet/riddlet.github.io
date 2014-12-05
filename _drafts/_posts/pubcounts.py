@@ -10,12 +10,14 @@ This is a temporary script file.
 import pandas as pd
 import numpy as np
 import re
-from ggplot import *
 import glob
 import os
+import matplotlib
+from pylab import *
 
 #
 # Next, I extract the files, and add what year they came from
+pathdir = os.path.dirname(os.path.abspath('__file__'))
 pathdir = os.chdir('..')
 files = glob.glob('data/Scopus-*.csv')
 data = pd.DataFrame()
@@ -38,6 +40,15 @@ papersbyyear.plot()
 #
 # For the next set of tricks, it would be good to see if there were any jumps 
 # in the number of journals for each year.
-titlesbyyear = data.groupby('Year')['Source Title'].nunique
+titlesbyyear = data.groupby('Year')['Source Title'].nunique()
+titlesbyyear.plot(ylim=(155,165))
 
-yeargroups = data.groupby('Year')
+#
+# Nothing there I guess.  We can look to see which journals saw the biggest 
+# increase from 1995 to 1996
+datawide = data.groupby(['Year', 'Source Title']).Papers.sum().unstack('Year')
+datawide['Change'] = datawide['1996']/datawide['1995'] 
+datawide.head()
+datawide.sort = datawide.sort('Change', ascending=0)
+
+    
