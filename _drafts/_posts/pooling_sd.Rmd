@@ -9,7 +9,9 @@ A colleague of mine conducting a meta analysis recently asked me if it was possi
 
 Or, more succinctly:
 
-$$\sigma = \sqrt{\frac{n_1 \sigma_1^2 + n_2 \sigma_2^2 + n_1(\mu_1 - \mu)^2 + n_2(\mu_2 - \mu)^2}{n_1 + n_2}}$$
+$$
+  \sigma = \sqrt{\frac{n_1 \sigma_1^2 + n_2 \sigma_2^2 + n_1(\mu_1 - \mu)^2 + n_2(\mu_2 - \mu)^2}{n_1 + n_2}} 
+$$
 
 This looked okay to me, except for one thing:  dividing by $n$ leads to underestimating the true standard deviation.  Thus we typically divide by $n - 1$.  To demonstrate this, I've simulated drawing 10,000 random samples of *n* = 30 from a normal distribution with *M* = 100, *S* = 10 and plotted the results below:
 
