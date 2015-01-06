@@ -1,0 +1,210 @@
+---
+title: "On the importance of Looking at your data"
+runtime: shiny
+output: html_document
+---
+
+I've long been meaning to mess around with the [Lahman][ref1] database.  Baseball season is right around the corner (sort of), and I thought now would be a good time to look at what I can do with this.  In the process of poking around, I realized that I had encountered a very important lesson on looking at your data.  I mean *looking* at it.  Making plots, tables, and so forth.  I haven't done any real analyses of these data yet, but it seemed like a good time to post what I've done.
+
+I thought I'd look at how runs scored change over time - both historically and over the course of an individual player's career.  So I'm going to start by pulling playerID, team, year, and runs from the Batting table within the [Lahman][ref1] database.  I'll also get playerID and year of birth from the Master table within Lahman.
+
+```{r}
+library(Lahman)
+
+df.bat <- with(Batting, data.frame(playerID=playerID,
+                               teamID=teamID,
+                               yearID=yearID,
+                               R=R
+                               ))
+```
+
+But if I'm going to predict runs scored, I also need information about how old the player was - age is a crucial predictor of performance.  Conventional wisdom suggests that player performance peaks in the late twenties to early thirties, and declines pretty rapidly after that.  Raw age is not available, so I'll have to compute it.
+
+```{r, warning=FALSE, message=FALSE}
+df.mast <- with(Master, data.frame(playerID=playerID, 
+                                   birth=birthYear))
+
+df <- merge(df.bat, df.mast, by='playerID')
+df$age <- df$yearID - df$birth
+
+library(ggplot2)
+
+ggplot(df, aes(x=age)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Age') +
+  theme_bw()
+```
+
+That looks about as expected.  Let's take a look at the distribution of runs scored:
+
+```{r}
+ggplot(df, aes(x=R)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+  theme_bw()
+```
+
+Okay, also, not surprising.  Most of the observations in this dataset probably come from players who had a cup of coffee and that was it.  I'm not really interested in these individuals, so I think we'll limit our sample to players who had a bit more experience.  We'll use at-bats as a proxy for this, so I'll need to bring that into the dataframe.
+
+```{r}
+df$AB <- Batting$AB
+
+ggplot(df, aes(x=AB)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('At-bats') +
+  theme_bw()
+```
+
+Looks like another poisson distribution.  However, it also looks like we can see a bump out at around 550 or so.  Let's zoom in on those, just to gratify my curiosity.
+
+```{r}
+ggplot(df[df$AB>250,], aes(x=AB)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('At-bats') +
+  theme_bw()
+```
+
+uh huh.  Looks like we've got a mixture of distributions here.  I'm not really sure how to handle this.  I wonder what happens if I look at the number of games played too.
+
+```{r}
+df$G <- Batting$G
+
+ggplot(df, aes(x=G)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Games') +
+  theme_bw()
+```
+
+Okay, there's some other odd stuff going on here.  I'm not sure what that bump at around 40 is.  Anyone else?  Regardless, we're seeing the same kind of bump out near the end.  The corresponding bump in AB should represent players who basically played a full season.  Let's see what happens to the AB distribution if we select players who had more than 150 games.
+
+```{r}
+ggplot(df[df$G>150,], aes(x=AB)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('At-bats') +
+  theme_bw()
+```
+
+Oh man, look at that distribution!  I suppose I could cut off some of those lower values, but I think this looks pretty nice!  Now, let's look at runs scored.  
+
+```{r}
+ggplot(df[df$G>150,], aes(x=R)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+  theme_bw()
+```
+
+Mystifying.  How could someone play 150 games without scoring a single run?  Let's take a look at a few observations.
+
+```{r}
+head(df[which(df$G>150 & df$R < 10),])
+```
+
+Row 569 belongs to a player named Benny Agbayani, who played for the Red Sox in 2002 (as well as the Rockies).  Baseball-reference tells me that he played in 61 games, had a total of 154 ABs that year, and scored a total of 15 runs.  So clearly this data isn't right.  Let's look at the the original dataframe to be sure I didn't do something wrong when I extracted this.
+
+```{r}
+Batting[which(Batting$playerID=='agbaybe01'),]
+```
+
+That confirms it.  I've goofed somewhere.  Let's track this down.
+
+```{r}
+df.bat <- with(Batting, data.frame(playerID=playerID,
+                               teamID=teamID,
+                               yearID=yearID,
+                               R=R
+                               ))
+df.bat[which(df.bat$playerID=='agbaybe01'),]
+```
+
+That's fine.  Next thing I did was:
+
+```{r}
+df.mast <- with(Master, data.frame(playerID=playerID, 
+                                   birth=birthYear))
+
+df.mast[which(df.mast$playerID=='agbaybe01'),]
+```
+
+Next:
+
+```{r}
+df <- merge(df.bat, df.mast, by='playerID')
+
+df[which(df$playerID=='agbaybe01'),]
+```
+
+AH!  That worked okay, but for some reason, the values rows have been shuffled around a little bit.  Whereas before, the dataframe was organized alphabetically by player ID, and chronologically by year within player, now the years have been shuffled.  I can't really see any logic to the ordering within player.  Maybe reverse chronologically?  Regardless, this is an easy fix.  I'll go ahead and recompute the age, and then extract ABs and games played in a way which will assign the values correctly.  To do this, I'm going to use Hadley Wickham's [plyr][ref2] package.  
+
+```{r}
+df$age <- df$yearID - df$birth
+library(plyr)
+df<-join(Batting, df)
+df[which(df$playerID=='agbaybe01'),]
+```
+
+Okay.  *Mucho mejor*!  Let's re-examine those distributions which had looked so good before.  This is the bump in ABs.
+
+```{r}
+ggplot(df[df$AB>250,], aes(x=AB)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('At-bats') +
+  theme_bw()
+```
+
+Not too much of a difference, but it is slightly different.  Next, limit the data to only those with more than 150 games played:
+
+```{r}
+ggplot(df[df$G>150,], aes(x=AB)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('At-bats') +
+  theme_bw()
+```
+
+Nice!  That even might be slightly more symmetric than the original one.  Alright, let's look at the runs scored for this group.
+
+```{r}
+ggplot(df[df$G>150,], aes(x=R)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+  theme_bw()
+```
+
+Man that's gratifying.  Look at that distribution.  Just look at it!  And this leaves us with a good bit of data too, weighing in with `r dim(df[df$G>150,])[1]` observations.  Just for kicks, and because I've never tried before, let's make a shiny app which allows the user to specify the number of games needed for inclusion.
+
+```{r, eval=FALSE}
+library(shiny)
+inputPanel(
+  sliderInput('games', label="Minimum Number of Games Played:",
+              min=1, max=162, value=150, step=1)
+  )
+
+renderPlot({
+     p<-ggplot(df[df$G>input$games,], aes(x=R)) + 
+    geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+    theme_bw()
+   print(p)
+})
+```
+
+```{r, echo=FALSE}
+library(shiny)
+inputPanel(
+  sliderInput('games', label="Minimum Number of Games Played:",
+              min=1, max=162, value=150, step=1)
+  )
+
+renderPlot({
+     p<-ggplot(df[df$G>input$games,], aes(x=R)) + 
+    geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+    theme_bw()
+   print(p)
+})
+```
+Man, that's cool.  =)
+
+So, what's the lesson here?  Just to make sure you're looking at your data.  At *every* step of the way.  You never know when you'll have done something you didn't intend to, or when some variable looks much different from the way you think it should.  In the former case, you'll need to retrace your steps to find the problem.  In the latter case, you may have to rethink your analyses.
+
+[ref1]:  <http://cran.r-project.org/web/packages/Lahman/index.html>
+[ref2]:  <http://cran.r-project.org/web/packages/plyr/index.html>
