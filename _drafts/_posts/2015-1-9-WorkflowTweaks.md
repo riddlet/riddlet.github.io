@@ -7,7 +7,7 @@ I've found Jekyll to be a good mechanism for publishing these thoughts, code & a
 
 ###### 1.  .Rmd -> .md
 
-I used the `KnitPost` function I found [here][ref1].  It worked beautifully on the post I was working on.  We'll see how it holds up in the long-term.
+I used the `KnitPost` function I found [here][ref1].  It has worked beautifully so far.  We'll see how it holds up in the long-term.
 
 ###### 2.  Latex support?
 
@@ -17,7 +17,7 @@ This led to output which either just displayed the latex directly, as follows:
 
 Or didn't display at all, depending on how, exactly, I adjusted the site settings (as found in the _layouts or _includes directories; or in the _config.yml file).  
 
-The solution took a bit of digging around, but eventually after poking around [Carl Boettiger's][ref2] site for long enough, I was able to figure out how this works.  To the `default.html` file in the _layouts folder, I added:
+The solution took a bit of digging around, but eventually after looking around [Carl Boettiger's][ref2] site for long enough, I was able to figure out how this works.  To the `default.html` file in the _layouts folder, I added:
 
 {% highlight html %}
 <script type="text/javascript"
