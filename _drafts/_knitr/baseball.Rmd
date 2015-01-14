@@ -99,7 +99,7 @@ Mystifying.  How could someone play 150 games without scoring a single run?  Let
 head(df[which(df$G>150 & df$R < 10),])
 ```
 
-Row 569 belongs to a player named Benny Agbayani, who played for the Red Sox in 2002 (as well as the Rockies).  Baseball-reference tells me that he played in 61 games, had a total of 154 ABs that year, and scored a total of 15 runs.  So clearly this data isn't right.  Let's look at the the original dataframe to be sure I didn't do something wrong when I extracted this.
+Row 569 belongs to a player named [Benny Agbayani][ref2], who played for the Red Sox in 2002 (as well as the Rockies).  Fangraphs tells me that he played in 61 games, had a total of 154 ABs that year, and scored a total of 15 runs.  So clearly this data isn't right.  Let's look at the the original dataframe to be sure I didn't do something wrong when I extracted this.
 
 ```{r}
 Batting[which(Batting$playerID=='agbaybe01'),]
@@ -133,7 +133,7 @@ df <- merge(df.bat, df.mast, by='playerID')
 df[which(df$playerID=='agbaybe01'),]
 ```
 
-AH!  That worked okay, but for some reason, the values rows have been shuffled around a little bit.  Whereas before, the dataframe was organized alphabetically by player ID, and chronologically by year within player, now the years have been shuffled.  I can't really see any logic to the ordering within player.  Maybe reverse chronologically?  Regardless, this is an easy fix.  I'll go ahead and recompute the age, and then extract ABs and games played in a way which will assign the values correctly.  To do this, I'm going to use Hadley Wickham's [plyr][ref2] package.  
+AH!  That worked okay, but for some reason, the values rows have been shuffled around a little bit.  Whereas before, the dataframe was organized alphabetically by player ID, and chronologically by year within player, now the years have been shuffled.  I can't really see any logic to the ordering within player.  Maybe reverse chronologically?  Regardless, this is an easy fix.  I'll go ahead and recompute the age, and then extract ABs and games played in a way which will assign the values correctly.  To do this, I'm going to use Hadley Wickham's [plyr][ref3] package.  
 
 ```{r}
 df$age <- df$yearID - df$birth
@@ -228,4 +228,5 @@ Man, that's cool.  =)
 So, what's the lesson here?  Just to make sure you're looking at your data.  At *every* step of the way.  You never know when you'll have done something you didn't intend to, or when some variable looks much different from the way you think it should.  In the former case, you'll need to retrace your steps to find the problem.  In the latter case, you may have to rethink your analyses.
 
 [ref1]:  <http://cran.r-project.org/web/packages/Lahman/index.html>
-[ref2]:  <http://cran.r-project.org/web/packages/plyr/index.html>
+[ref2]: <http://www.fangraphs.com/statss.aspx?playerid=416&position=OF>
+[ref3]:  <http://cran.r-project.org/web/packages/plyr/index.html>

@@ -1,0 +1,73 @@
+---
+title: "Menustat"
+output: html_document
+---
+
+I recently found a pretty interesting dataset I thought I'd examine a little bit.  I took the following data from [menustat.org][ref1].  You can easily download the same data by using their 'search' function, and having it return all data for all available years.  Once done, there's a button that lets you export the data as a csv.  
+
+```{r, eval=FALSE}
+menus<-read.csv('../Data/menustat-546cf6b433804.csv')
+#this doesn't work.  Throws an error:
+
+#Error in read.table(file = file, header = header, sep = sep, quote = quote,  : 
+#  more columns than column names
+```
+
+Aw damn.  Well, that didn't work.  Why not?  The error message says that there's a mismatch between the number of columns, and the number of names it has for the columns.  Usually, this function reads the column names from the first line of the csv document, so I'm guessing that something is wrong with the first line of the csv.  Opening it up in a text editor shows the following:
+
+![Raw text of menustat][img1]
+
+See the big chunk of text next to the 1 on the lefthand side?  That's all the stuff that appears in the first line, and we can see that it's just kind of a description of the file.  We can get rid of that.  Line 2 seems to have the columns we want.  While we're at it, we can also see that there's a bunch of empty cells that look like this:  "   -".  When we read this into r, it will be represented as '\t-'.  There are also some spots where there's a tab without the dash (i.e. '  ').  We're gonna get rid of those too.  So we're going to take a slightly different approach from just reading in the csv:
+
+1.  Read the file, line by line as one big vector
+2.  Remove the first line.
+3.  Replace any '  -' or '  ' with a simple blank cell.
+3.  Turn the vector into a dataframe.
+
+
+```{r}
+menus<-readLines('../Data/menustat-546cf6b433804.csv')
+menus<-menus[-1]
+menus<-gsub('\t-', '', menus)
+menus<-gsub('\t', '', menus)
+menus<-read.csv(textConnection(menus)) #this takes a minute...
+```
+
+Now we have a datafile for our menus data!  Let's get some information about it:
+
+```{r}
+dim(menus)
+```
+
+We've got 60,238 observations across 52 different variables.  Let's get a little information about those variables.
+
+```{r}
+str(menus)
+```
+
+We can now see the names for our variables.  Looks like there's one for restaurant, one for food category, one for the item, and then we have a bunch of variables which are repeated for each of 3 years: 2014, 2013, 2012.  These variables describe the item, give us a serving size, and then the nutrient information (e.g. calories, fat, carbs, protein, etc.).  We can also see that everything, with a couple of exceptions, is stored as a factor, which isn't ideal.  Let's replace some of these things with characters:
+
+```{r}
+submenus<-menus[,3:51] #leave 'Restuarant', 'Food Category', and 'Menu Item ID' untouched.
+submenus[]<-lapply(submenus, as.character)
+menus[,3:51]<-submenus
+```
+
+Now, in order to do any serious quantitative analyses, we should convert these characters to numeric variables.  Unfortunately, because of the way the data is represented, there are lots of values which say something like '25-30' (e.g. for total fat in a serving) or '<1'.  When we convert these variables, these observations will be lost.  We could take some steps to preserve them, but it isn't clear what such values should be replaced by, so we'll just leave them as NA.
+
+```{r}
+submenus<-menus[,c(7:15, 19:51)]
+submenus[]<-lapply(submenus, as.numeric)
+menus[,c(7:15, 19:51)]<-submenus
+```
+
+The next thing I'd like to do is reshape this data a bit.  Right now, we've got three years of observations for each menu item, and each year is on the same row (we have multiple variables that are measured for each year as well).  I'd like to have this rearranged such that there's one row for each year.  Also known as 'tidy data'So:
+
+```{r}
+library(reshape2)
+a<-melt(menus, id.vars = c('Restaurant.', 'Food.Category.', 'Item_Name.', 'Menu_Item_ID'))
+a$
+```
+
+
+[img1]: <menustat_text.png>
