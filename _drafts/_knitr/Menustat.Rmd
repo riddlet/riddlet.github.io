@@ -61,13 +61,129 @@ submenus[]<-lapply(submenus, as.numeric)
 menus[,c(7:15, 19:51)]<-submenus
 ```
 
-The next thing I'd like to do is reshape this data a bit.  Right now, we've got three years of observations for each menu item, and each year is on the same row (we have multiple variables that are measured for each year as well).  I'd like to have this rearranged such that there's one row for each year.  Also known as 'tidy data'So:
+The next thing I'd like to do is reshape this data a bit.  Right now, we've got three years of observations for each menu item, and each year is on the same row (we have multiple variables that are measured for each year as well).  I'd like to have this rearranged such that there's one row for each year.  Also known as 'tidy data' So:
 
 ```{r}
 library(reshape2)
-a<-melt(menus, id.vars = c('Restaurant.', 'Food.Category.', 'Item_Name.', 'Menu_Item_ID'))
-a$
+library(stringr)
+library(plyr)
+df<-melt(menus, id.vars = c('Restaurant.', 'Food.Category.', 'Item_Name.', 
+                           'Menu_Item_ID'))
+df$year<-str_match(df$variable, "[0-9]{4}")
+df$variable <- gsub('\\.{1,2}', '', df$variable)#remove dots
+df$variable <- gsub('[0-9]', '', df$variable)#remove year
+df$variable <- gsub('\\s+$', '', df$variable)#remove trailing space
+df<-dcast(df, Restaurant. + Food.Category. + Item_Name. + Menu_Item_ID + year ~ 
+           variable , value.var = 'value')
+df<-arrange(df, Restaurant., Item_Name.)
 ```
 
+That's much better.  Now, let's make a couple of preliminary plots.  I'm first going to focus on calories plus the macronutrients - carbs, proteins, and fats.  Let's look at how these things vary depending on which food category they fall into.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+df$Calories <- as.numeric(df$Calories)
+ordered.df <- group_by(df, Food.Category.) %>%
+  summarise(med = median(Calories, na.rm=T)) %>%
+  arrange(desc(med)) %>%
+  as_data_frame()
+df$Food.Category. <- factor(df$Food.Category., levels=ordered.df$Food.Category.)
+
+plot <- ggplot(df, aes(x=Food.Category., y=Calories))
+plot + geom_boxplot(fill='#ABC3CE') +
+  xlab('Food Category') + 
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle=15, vjust=.9))
+```
+
+I've also taken the liberty of ordering the x axis according to median, descending from left to right.  Nothing especially surprising here.  Biggest calorie bombs are Burgers, Entrees, and Sandwiches.  One Burger tips the scales at around 5000 calories, and while that's around 2 days worth of the recommended daily energy needs for the average male, I guess it isn't *too* surprising.  Next up is carbs:
+
+```{r}
+df$Carbohydratesg <- as.numeric(df$Carbohydratesg)
+ordered.df <- group_by(df, Food.Category.) %>%
+  summarise(med = median(Carbohydratesg, na.rm=T)) %>%
+  arrange(desc(med)) %>%
+  as_data_frame()
+df$Food.Category. <- factor(df$Food.Category., levels=ordered.df$Food.Category.)
+
+
+plot <- ggplot(df, aes(x=Food.Category., y=Carbohydratesg))
+plot + geom_boxplot(fill='#ABC3CE') +
+  xlab('Food Category') + ylab('Carbohydrates') + 
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle=15, vjust=.9))
+```
+
+This is a bit odd.  There's apparently a side or appetizer which has north of 800 grams of carbohydrates.  I find this hard to believe.  Let's look a little more closely.
+
+```{r}
+subset(df, df$Carbohydratesg > 800)
+```
+
+Ah!  My old alma mater!  I spent about 7 months employed by Red Robin in the year between undergrad and my master's program at SFSU.  It let me pay off the absurd costs incurred by applying to graduate school in my first attempt.  Anyway, this seems to say that there are 838 grams of carbohydrates in 313 calories worth of Guac & Salsa with chips.  I don't know that I believe this.  Let's look at the rows around it (where the same item for 2013 and 2012 should appear)
+
+```{r}
+df[131161:131163,]
+```
+
+Well, 2013 seems to be about as expected.  2014, however, seems to be a lost cause.  I even did a bit of poking around on the web to see if I could find some better information, but there doesn't seem to be anything on the first page or two of google.  We'll replace these carb count here with NA and replot.
+
+```{r}
+df$Carbohydratesg[131161] <- NA
+plot <- ggplot(df, aes(x=Food.Category., y=Carbohydratesg))
+plot + geom_boxplot(fill='#ABC3CE') +
+  xlab('Food Category') + ylab('Carbohydrates') + 
+  theme_bw() +
+  theme(axis.text.x = element_text(angle=15, vjust=.9))
+```
+
+That's much better.  On to protein:
+
+```{r}
+df$Proteing <- as.numeric(df$Proteing)
+ordered.df <- group_by(df, Food.Category.) %>%
+  summarise(med = median(Proteing, na.rm=T)) %>%
+  arrange(desc(med)) %>%
+  as_data_frame()
+df$Food.Category. <- factor(df$Food.Category., levels=ordered.df$Food.Category.)
+
+
+plot <- ggplot(df, aes(x=Food.Category., y=Proteing))
+plot + geom_boxplot(fill='#ABC3CE') +
+  xlab('Food Category') + ylab('Protein') + 
+  theme_bw() +
+  theme(axis.text.x = element_text(angle=15, vjust=.9))
+```
+
+Okay, a few oddities.  A couple of `Toppings & Ingredients' with quite a bit more protein than one would think.  Also, there's a burger with over 300 grams of protein.  I'll bet it's the one with 5000 calories.
+
+```{r}
+subset(df, df$Proteing > 240)
+```
+
+Okay, first of all, behold the [Landfill Burger][ref1].  Yikes.  That is the definition of an outlier.  Still, I see no reason to remove it or anything.  That's a real thing.  A real burger.
+
+Moving on, we see the sides of Blue Cheese and Ranch dressing.  Popular among body builders as a quick dose of protein immediately following a workout...
+
+Except not at all.  We can attempt the same thing
+
+***LEFT OFF HERE***
+
+```{r}
+df$TotalFatg <- as.numeric(df$TtotalFatg)
+ordered.df <- group_by(df, Food.Category.) %>%
+  summarise(med = median(TotalFatg, na.rm=T)) %>%
+  arrange(desc(med)) %>%
+  as_data_frame()
+df$Food.Category. <- factor(df$Food.Category., levels=ordered.df$Food.Category.)
+
+
+plot <- ggplot(df, aes(x=Food.Category., y=TotalFatg))
+plot + geom_boxplot(fill='#ABC3CE') +
+  xlab('Food Category') + ylab('Total Fat') + 
+  theme_bw()
+```
 
 [img1]: <menustat_text.png>
+[ref1]:  <http://api.ning.com/files/drL7ji10lw0df0UGzfzR3Wgna8ZmVV2JSf-ebXK3ggx1hTZlYsoH5*nmXIW9-QjqmRicEjoeROQZ4I*FS3FQKPxRpAZuKxwx/100_0218.JPG?width=737&height=552>
