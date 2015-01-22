@@ -1,6 +1,6 @@
 ---
 title: "Pooling SD, Pt 2"
-output: html_document
+layout: post
 ---
 
 [Previously][link1], I examined how when calculating the standard deviation of a sample, if we divide by $n$, we obtain a biased estimate.  The problem is exacerbated when the sample size is small, as in the typical psychology experiment.  TO correct for this, one should instead divide by $n - 1$.  However, the more interesting question is what to do when you're computing the standard deviation of two separate samples.
