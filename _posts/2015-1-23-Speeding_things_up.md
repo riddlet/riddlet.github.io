@@ -5,7 +5,7 @@ title: "Speeding Things Up"
 
 I recently found a pretty interesting dataset I thought I'd examine a little bit.  I took the following data from [menustat.org][ref1].  You can easily download the same data by using their 'search' function, and having it return all data for all available years.  Once done, there's a button that lets you export the data as a csv.  
 
-The size of this dataset also means that there were some pieces that I wrote off the cuff which turned out to be far too slow.  Changing things around a little bit resulted in a substantial speed-up.  I'll take us through some data prep and then show two pieces of code that do the same thing, one of which operates *significantly* faster.  Typically, I don't deal with datasets where thinking about speed-up offers much payoff - everything runs fast when you're only dealing with 150 observations.  However, the present case is a bit different.
+The size of this dataset also means that there were some pieces that I wrote off the cuff which turned out to be far too slow.  Changing things around a little bit resulted in a substantial speed-up.  I'll take us through some data prep and then show two pieces of code that do the same thing, one of which operates *significantly* faster.  Typically, I don't deal with datasets where thinking about speed-up offers much payoff - everything runs fast when you're only dealing with 150 observations.  In fact, I've [previously mentioned][ref2] how this idea of "powerful" code is something I'm not too concerned about.  However, due to size, the present case is a bit different.
 
 ### Read the data
 
@@ -46,7 +46,7 @@ system.time(menus<-read.csv(textConnection(menus)))
 ##  59.730   0.090  59.967
 {% endhighlight %}
 
-That last line takes a while - about a full minute on my desktop machine.  If there's a way to speed that up, I don't know it.  At any rate, now we've got a big, beautiful have a datafile for our menus data!  Let's get some information about it:
+That last line takes a while - about a full minute on my desktop machine.  If there's a way to speed that up, I don't know it.  At any rate, now we've got a big, beautiful datafile for our menus data!  Let's get some information about it:
 
 
 {% highlight r %}
@@ -202,7 +202,7 @@ levels(df$variable) <- gsub('[0-9]', '', levels(df$variable))#remove year
 levels(df$variable) <- gsub('\\s+$', '', levels(df$variable))#remove trailing space
 {% endhighlight %}
 
-want to place a bet on which one runs more quickly?  In version one, we're performing the operation on vectors which are nearly 3 million observations long (length = 2891424), but we're doing it all at once.  Version two, on the other hand, boils down these long vectors into their their unique values (as designated by the levels of the factor), performs the operation on this considerably shorter (length = 48) vector, and then replaces all common values at once.
+Want to place a bet on which one runs more quickly?  In version one, we're performing the operation on vectors which are nearly 3 million observations long (length = 2891424), but we're doing it all at once.  Version two, on the other hand, boils down these long vectors into their their unique values (as designated by the levels of the factor), performs the operation on this considerably shorter vector (length = 48), and then replaces all common values at once.
 
 The winner?
 
@@ -220,8 +220,9 @@ The winner?
 ##   0.308   0.042   0.350
 {% endhighlight %}
 
-I believe this is a prime example of why aiming to vectorize your code in R is a good thing.  I use a [hedge][ref2] there because I'm not quite sure if this is really an example of vectorization.  I mean, sure, I applied the regular expressions to the levels of a vector (each of which are themselves vectors), and replaced the original with the modification.  But in version 1, was I also not applying the regular expression to the values of a vector (even if that vector was considerably longer)?
+I believe this is a prime example of why aiming to vectorize your code in R is a good thing.  I use a [hedge][ref3] there because I'm not quite sure if this is really an example of vectorization.  I mean, sure, I applied the regular expressions to the levels of a vector (each of which are themselves vectors), and replaced the original with the modification.  But in version 1, was I also not applying the regular expression to the values of a vector (even if that vector was considerably longer)?
 
-[img1]: </../images/menustat_text.png>
+[img1]:  <../images/menustat_text.png>
 [ref1]:  <http://api.ning.com/files/drL7ji10lw0df0UGzfzR3Wgna8ZmVV2JSf-ebXK3ggx1hTZlYsoH5*nmXIW9-QjqmRicEjoeROQZ4I*FS3FQKPxRpAZuKxwx/100_0218.JPG?width=737&height=552>
-[ref2]: <http://en.wikipedia.org/wiki/Hedge_%28linguistics%29>
+[ref2]:  <http://riddlet.github.io/Powerful%20vs%20Functional/>
+[ref3]:  <http://en.wikipedia.org/wiki/Hedge_%28linguistics%29>

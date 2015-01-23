@@ -210,4 +210,4 @@ plot + geom_boxplot(fill='#ABC3CE') +
 Our variables of interest are now relatively clean, and we can proceed with some more interesting analyses.  This will be the subject of a subsequent post.
 
 [img1]: <menustat_text.png>
-[ref1]:  <http://api.ning.com/files/drL7ji10lw0df0UGzfzR3Wgna8ZmVV2JSf-ebXK3ggx1hTZlYsoH5*nmXIW9-QjqmRicEjoeROQZ4I*FS3FQKPxRpAZuKxwx/100_0218.JPG?width=737&height=552>
+[ref2]:  <http://api.ning.com/files/drL7ji10lw0df0UGzfzR3Wgna8ZmVV2JSf-ebXK3ggx1hTZlYsoH5*nmXIW9-QjqmRicEjoeROQZ4I*FS3FQKPxRpAZuKxwx/100_0218.JPG?width=737&height=552>
