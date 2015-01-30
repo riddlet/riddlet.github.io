@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "On the importance of Looking at your data"
+title: "On the Importance of Looking at your Data"
 runtime: shiny
 output: html_document
 ---

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Computational approaches to language in psychology
+title: Computational Approaches to Language in Psychology
 ---
 
 I've been reading pretty widely across the social sciences recently, looking at instances of using computational approaches to text.  It seems like this sort of stuff is really sweeping through the political science literature, and I've stumbled across [quite][1] a [few][2] [papers][3] in that discipline which I think do a really nice job of explaining the nuts and bolts of applying these techniques.  Much of my understanding is thanks to their efforts.  

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Some tweaks to the workflow
+title: Some Tweaks to the Workflow
 ---
 
 I've found Jekyll to be a good mechanism for publishing these thoughts, code & analyses.  However, every now and then I run into a problem which requires a bit of tweaking.  For instance, getting latex to render with the Rmarkdown -> jekyll -> github pages workflow turned out to be a bit of a hassle.  Here's what I ended up doing:
