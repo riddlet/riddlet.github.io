@@ -1,0 +1,77 @@
+---
+title: "Two Variables, One Axis"
+output: html_document
+---
+
+If it isn't obvious by now, I'm a big fan of Hadley Wickham's [ggplot2][ref1] package for creating visualizations.  I'm regularly surprised by how flexible it is, and once you understand what's going on, how easy it is to specify exactly what you want.
+
+For example, I encountered a situation this week where I wanted to plot two variables on the x axis.  When I first started using ggplot, I didn't have a straightforward way of specifying this.  You lay out the aesthetics in the plot background (i.e. what goes on the x axis and what goes on the y axis), and then you start adding layers which show information about those variables that you think are worth highlighting.  
+
+So, for example, using the [Lahman][ref2] dataset I've previously worked with, we can do something like this:
+
+```{r, warning=FALSE}
+library(ggplot2)
+library(plyr)
+library(Lahman)
+df.mast <- with(Master, data.frame(playerID=playerID, birth=birthYear))
+df<-join(Batting, df.mast)
+df$age <- df$yearID - df$birth
+
+ggplot(df, aes(x=age, y=stint)) +
+ stat_summary(fun.y=mean, geom='line', color='#144256', size=1.5) + 
+  theme_bw() + xlab('Age') + ylab('Teams Played for')
+```
+
+This shows that players tend to see an increased likelihood of being traded as they progress toward their mid 30's.  X axis is age, y axis is the number of teams played for.  I've made the plot by assigning a plot background:
+
+`ggplot(df, aes(x=age, x=stint)) +`
+
+And following that up with a layer of data:
+
+`stat_summary(fun.y=mean, geom='line', color='#144256', size=1.5)`
+
+And then adjusting some of the visual properties:
+
+`theme_bw() + xlab('Age') + ylab('Teams Played for')`.
+
+However, it should be readily apparent that the nature of the plot out at the tails is different than that in the middle.  In particular, the pattern is a lot more volatile.  This is undoubtedly a function of fewer numbers of observations.  There are a few ways to incorporate this information into the plot (show the data!), but to illustrate a neat trick in ggplot, I'm going to write some numbers directly onto the plot.  This will require plotting a second variable on one of the axes.
+
+```{r}
+library(dplyr)
+df <- count(df, age) %>%
+  full_join(df, by='age')
+
+ggplot(df, aes(x=age, y=stint)) +
+ stat_summary(fun.y=mean, geom='line', color='#144256', size=1.5) + 
+  xlab('Age') + ylab('Teams Played for') + theme_bw() +
+  geom_point(aes(x=age, y=1, size=df$n), color='#88301B') +
+  scale_size_continuous(range=c(1, 10), 
+                        name='Number of Observations',
+                        breaks=c(500, 2500, 4500, 6500, 7500))
+
+```
+
+This at least gives an indication.  To be clear, this is not how I would typically choose to visualize this data.  However, it does give some indication of why we should be hesitant to trust some of the patterns observed out near the ends of the age distribution.  Let's look at how we did that:
+
+```
+ggplot(df, aes(x=age, y=stint)) +
+ stat_summary(fun.y=mean, geom='line', color='#144256', size=1.5) + 
+  xlab('Age') + ylab('Teams Played for') + theme_bw() +
+```
+
+These lines are the same as for the first plot.  Next we do something slightly different.
+
+`geom_point(aes(x=age, y=1, size=df$n), color='#88301B') +`
+
+Here, I've added a new layer - geometric points.  I've also given these points their own data.  The x-axis is the same, but I've manually specified y to be set to 1 for all values of age.  I'm also scaling the size of the point by the variable n, which corresponds to the number of observations at each age bracket.  After this, I scale the size of the circles and change the appearance of the legend with the following:
+
+```
+scale_size_continuous(range=c(1, 10), 
+                      name='Number of Observations',
+                      breaks=c(500, 2500, 4500, 6500, 7500))
+```
+
+And there you have it - I've plotted a different variable on the same axis.  Note that this is usually not recommended, but I'm doing this strictly for illustration.  We could just as easily have stuck some other variable in our dataframe into y (or plotted a histogram of the number of observations), but then we have a y axis scaling problem.
+
+[ref1]:  <http://ggplot2.org/>
+[ref2]:  <http://cran.r-project.org/web/packages/Lahman/index.html>
