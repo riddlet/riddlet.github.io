@@ -1,6 +1,6 @@
 ---
+layout: post
 title: "Two Variables, One Axis"
-output: html_document
 ---
 
 If it isn't obvious by now, I'm a big fan of Hadley Wickham's [ggplot2][ref1] package for creating visualizations.  I'm regularly surprised by how flexible it is, and once you understand what's going on, how easy it is to specify exactly what you want.
@@ -9,7 +9,8 @@ For example, I encountered a situation this week where I wanted to plot two vari
 
 So, for example, using the [Lahman][ref2] dataset I've [previously worked with][ref3], we can do something like this:
 
-```{r, warning=FALSE, message=FALSE}
+
+{% highlight r %}
 library(ggplot2)
 library(plyr)
 library(Lahman)
@@ -20,7 +21,9 @@ df$age <- df$yearID - df$birth
 ggplot(df, aes(x=age, y=stint)) +
  stat_summary(fun.y=mean, geom='line', color='#144256', size=1.5) + 
   theme_bw() + xlab('Age') + ylab('Teams Played for')
-```
+{% endhighlight %}
+
+![center](/../images/dual axis/unnamed-chunk-1-1.png) 
 
 This shows that players tend to see an increased likelihood of being traded as they progress toward their mid 30's.  X axis is age, y axis is the number of teams played for.  I've made the plot by assigning a plot background:
 
@@ -36,7 +39,8 @@ And then adjusting some of the visual properties:
 
 However, it should be readily apparent that the nature of the plot out at the tails is different than that in the middle.  In particular, the pattern is a lot more volatile.  This is undoubtedly a function of fewer numbers of observations.  There are a few ways to incorporate this information into the plot (show the data!), but to illustrate a neat trick in ggplot, I'm going to write some numbers directly onto the plot.  This will require plotting a second variable on one of the axes.
 
-```{r, warning=FALSE, message=FALSE}
+
+{% highlight r %}
 library(dplyr)
 df <- count(df, age) %>%
   full_join(df, by='age')
@@ -48,7 +52,9 @@ ggplot(df, aes(x=age, y=stint)) +
   scale_size_continuous(range=c(1, 10), 
                         name='Number of Observations',
                         breaks=c(500, 2500, 4500, 6500, 7500))
-```
+{% endhighlight %}
+
+![center](/../images/dual axis/unnamed-chunk-2-1.png) 
 
 This at least gives an indication.  To be clear, this is not how I would typically choose to visualize this data.  However, it does give some indication of why we should be hesitant to trust some of the patterns observed out near the ends of the age distribution.  Let's look at how we did that:
 
@@ -72,15 +78,17 @@ scale_size_continuous(range=c(1, 10),
 
 We can also do something a little stranger, just to illustrate this point a little more thoroughly.  
 
-```{r, warning=FALSE, message=FALSE}
+
+{% highlight r %}
 df$scaled.prop <- (df$n/max(df$n)/2)+1
 
 ggplot(df, aes(x=age, y=stint)) +
  stat_summary(fun.y=mean, geom='line', color='#144256', size=1.5) + 
   xlab('Age') + ylab('Teams Played for') + theme_bw() +
   geom_line(aes(x=age, y=df$scaled.prop), color='#88301B', size=2, linetype=2) 
+{% endhighlight %}
 
-```
+![center](/../images/dual axis/unnamed-chunk-3-1.png) 
 
 Basically the same plot, but here I've included a scaled histogram of the proportion of data which makes up a given age.  You can see the calculation:
 
@@ -92,7 +100,8 @@ And then the inclusion on the plot:
 
 Finally, let's include one other kind variable on this plot - the maximum number of trades observed at each age.
 
-```{r, warning=FALSE, message=FALSE}
+
+{% highlight r %}
 df <- df %>%
   group_by(age) %>%
   mutate(age.max=max(stint)) %>%
@@ -102,13 +111,28 @@ ggplot(df, aes(x=age, y=stint)) +
  stat_summary(fun.y=mean, geom='line', color='#144256', size=1.5) + 
   xlab('Age') + ylab('Teams Played for') + theme_bw() +
   geom_point(aes(x=age, y=age.max), color='#88301B', size=2, linetype=2) 
-```
+{% endhighlight %}
+
+![center](/../images/dual axis/unnamed-chunk-4-1.png) 
 
 Fascinating.  That poor fellow who was traded 5 times in one season!  Who is he?
 
-```{r}
+
+{% highlight r %}
 df[df$stint==5,]
-```
+{% endhighlight %}
+
+
+
+{% highlight text %}
+## Source: local data frame [1 x 29]
+## 
+##   age    n  playerID yearID stint teamID lgID  G G_batting  AB  R  H X2B
+## 1  30 6681 huelsfr01   1904     5    WS1   AL 84        84 303 21 75  19
+## Variables not shown: X3B (int), HR (int), RBI (int), SB (int), CS (int),
+##   BB (int), SO (int), IBB (int), HBP (int), SH (int), SF (int), GIDP
+##   (int), G_old (int), birth (int), scaled.prop (dbl), age.max (int)
+{% endhighlight %}
 
 [Frank Huelsman][ref4], who would be 140 years old today if he were still alive.
 
