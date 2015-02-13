@@ -5,7 +5,7 @@ title: "Plot and Clean"
 
 In a [previous post][ref1], I described a dataset taken from [menustat.org][ref2].  I used the dataset to illustrate how some minor tweaks can get your analyses to run much more quickly.
 
-Anyway, the data is interesting in its own right, so I thought I'd look at some of what's in it here.
+Anyway, the data are interesting in its own right, so I thought I'd look at some of what's in it here.
 
 
 
