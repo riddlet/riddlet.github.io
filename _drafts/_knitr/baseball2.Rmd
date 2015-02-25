@@ -1,0 +1,255 @@
+---
+title: "baseball"
+output: html_document
+---
+
+I've really caught the baseball fever recently.  Pretty soon there will be no more snow on the ground, my face wont be ripped off by vicious, freezing ice wind every time I step outside, and I'll see the sun for more than 20 minutes a day.  Include the fact that I'll get to enjoy some baseball again, and it sounds better than Christmas.
+
+Anyway, I'm returning to the [Lahman][ref1] database, which, you'll recall, I looked at in a couple of [previous][ref2] [posts][ref3].  I'm going to return to the initial idea I had - examining how runs scored changes over time.
+
+Recall that the number of runs a player scores is determined largely by the number of games he plays.  When thinking about the number of games a player might play in a single season, I'll suggest that there are 3 basic types:
+
+1.  Bonafide major leaguers who play a full season of games.
+2.  Backups and subs who play quite a lot, but not quite a full season.
+3.  Players who are in the big leagues for a 'cup of coffee'.  They may play one game, ten games, a full month, or maybe even a bit more, but do not qualify as full-time major leaguers, and aren't exactly what you might call a backup.
+
+Because these make up qualitatively different types of players, we're going to restrict our analyses to the first:  full time major-leaguers.  I'm defining this group as players who played in at least 145 games (remember that the season was only 154 games long prior to the 1962 season).  This also means that I'm excluding some seasons before the turn of the century.  I'm fine with this - it was a much different game back then.
+
+As always, let's look at our data.  Here's the distribution of runs scored by this group.
+
+```{r}
+library(ggplot2)
+library(plyr)
+library(Lahman)
+df.mast <- with(Master, data.frame(playerID=playerID, birth=birthYear))
+df<-join(Batting, df.mast)
+df$age <- df$yearID - df$birth
+df <- subset(df, df$G>=145)
+
+ggplot(df, aes(x=R)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+  theme_bw()
+```
+
+Now, let's see how runs scored changes by year
+
+```{r, warning=FALSE, message=FALSE}
+ggplot(df, aes(y=R, x=yearID)) + 
+  geom_point(alpha=.5, color="#144256") +
+  stat_smooth(method='loess', color = '#88301B') +
+  ylab('Runs') + xlab('Year') +
+  theme_bw()
+```
+
+That doesn't exactly look like a linear relationship.  I'll have to think a little bit about how to examine that.  What about over the course of a career?
+
+```{r}
+ggplot(df, aes(y=R, x=age)) + 
+  geom_point(alpha=.5, color="#144256") +
+  stat_smooth(method='loess', color = '#88301B') +
+  ylab('Runs') + xlab('Year') +
+  theme_bw()
+```
+
+This is kind of interesting.  I expected to see a quadratic function here, but this suggests that there's a relatively constant rate of average performance.  Instead, there seems to be some action in the variability.  Just for kicks, let's highlight someone.  Say, Tony Gwynn?
+
+```{r}
+ggplot(df, aes(y=R, x=age)) + 
+  geom_point(alpha=.5, color="#144256") +
+  stat_smooth(method='loess', color='#88301B') +
+  geom_line(data=df[which(grepl('gwynn.+', df$playerID)),], aes(y=R, x=age), 
+            color='#88691B') +
+  ylab('Runs') + xlab('Year') +
+  theme_bw()
+```
+
+That age 27 season!  Let's just glory in it a little bit
+
+```{r}
+df[which(grepl('gwynn.+', df$playerID)),]
+```
+
+I'm just noticing that there's not batting average, obp, or ops in here.  Let's go ahead and add that in and re-examine mr. Gwynn's glory years.
+
+```{r}
+df$BA <- df$H/df$AB
+df$OBP <- (df$H + df$BB + df$HBP)/(df$AB + df$BB + df$HBP + df$SF)
+df$SLG <- (df$H-(df$X2B+df$X3B+df$HR) + (2*df$X2B) + (3*df$X3B) + (4*df$HR))/df$AB
+df[which(grepl('gwynn.+', df$playerID)),]
+```
+
+Yeah, he was good.  What I'm really seeing here, though, makes me wonder whether I can even begin to model runs scored in this fashion.  I need something else to help me predict them, as there's no real pattern in the data here.  What if I look at runs per game?
+
+```{r}
+df$RPG <- df$R/df$G
+
+ggplot(df, aes(y=RPG, x=age)) + 
+  geom_point(alpha=.5, color="#144256") +
+  stat_smooth(method='loess', color = '#88301B') +
+  ylab('Runs') + xlab('Year') +
+  theme_bw()
+```
+
+That's still pretty non-existent.  If I look at runs per game, there's no reason to exclude the players who didn't play a full season, so let's bring them back in.
+
+```{r}
+df<-join(Batting, df.mast)
+df$age <- df$yearID - df$birth
+df$BA <- df$H/df$AB
+df$OBP <- (df$H + df$BB + df$HBP)/(df$AB + df$BB + df$HBP + df$SF)
+df$SLG <- (df$H-(df$X2B+df$X3B+df$HR) + (2*df$X2B) + (3*df$X3B) + (4*df$HR))/df$AB
+df$RPG <- df$R/df$G
+ggplot(df, aes(y=RPG, x=age)) + 
+  geom_point(alpha=.5, color="#144256") +
+  stat_smooth(method='loess', color = '#88301B') +
+  ylab('Runs') + xlab('Year') +
+  theme_bw()
+```
+
+Oh man, look at that distribution!  I suppose I could cut off some of those lower values, but I think this looks pretty nice!  Now, let's look at runs scored.  
+
+```{r}
+ggplot(df[df$G>150,], aes(x=R)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+  theme_bw()
+```
+
+Mystifying.  How could someone play 150 games without scoring a single run?  Let's take a look at a few observations.
+
+```{r}
+head(df[which(df$G>150 & df$R < 10),])
+```
+
+Row 569 belongs to a player named [Benny Agbayani][ref2], who played for the Red Sox in 2002 (as well as the Rockies).  Fangraphs tells me that he played in 61 games, had a total of 154 ABs that year, and scored a total of 15 runs.  So clearly this data isn't right.  Let's look at the the original dataframe to be sure I didn't do something wrong when I extracted this.
+
+```{r}
+Batting[which(Batting$playerID=='agbaybe01'),]
+```
+
+That confirms it.  I've goofed somewhere.  Let's track this down.
+
+```{r}
+df.bat <- with(Batting, data.frame(playerID=playerID,
+                               teamID=teamID,
+                               yearID=yearID,
+                               R=R
+                               ))
+df.bat[which(df.bat$playerID=='agbaybe01'),]
+```
+
+That's fine.  Next thing I did was:
+
+```{r}
+df.mast <- with(Master, data.frame(playerID=playerID, 
+                                   birth=birthYear))
+
+df.mast[which(df.mast$playerID=='agbaybe01'),]
+```
+
+Next:
+
+```{r}
+df <- merge(df.bat, df.mast, by='playerID')
+
+df[which(df$playerID=='agbaybe01'),]
+```
+
+AH!  That worked okay, but for some reason, the values rows have been shuffled around a little bit.  Whereas before, the dataframe was organized alphabetically by player ID, and chronologically by year within player, now the years have been shuffled.  I can't really see any logic to the ordering within player.  Maybe reverse chronologically?  Regardless, this is an easy fix.  I'll go ahead and recompute the age, and then extract ABs and games played in a way which will assign the values correctly.  To do this, I'm going to use Hadley Wickham's [plyr][ref3] package.  
+
+```{r}
+df$age <- df$yearID - df$birth
+library(plyr)
+df<-join(Batting, df)
+df[which(df$playerID=='agbaybe01'),]
+```
+
+Okay.  *Mucho mejor*!  Let's re-examine those distributions which had looked so good before.  This is the bump in ABs.
+
+```{r}
+ggplot(df[df$AB>250,], aes(x=AB)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('At-bats') +
+  theme_bw()
+```
+
+Not too much of a difference, but it is slightly different.  Next, limit the data to only those with more than 150 games played:
+
+```{r}
+ggplot(df[df$G>150,], aes(x=AB)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('At-bats') +
+  theme_bw()
+```
+
+Nice!  That even might be slightly more symmetric than the original one.  Alright, let's look at the runs scored for this group.
+
+```{r}
+ggplot(df[df$G>150,], aes(x=R)) + 
+  geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+  theme_bw()
+```
+
+Man that's gratifying.  Look at that distribution.  Just look at it!  And this leaves us with a good bit of data too, weighing in with `r dim(df[df$G>150,])[1]` observations.  Just for kicks, and because I've never tried before, let's make a shiny app which allows the user to specify the number of games needed for inclusion.
+
+```{r, eval=FALSE}
+library(shiny)
+inputPanel(
+  sliderInput('games', label="Minimum Number of Games Played:",
+              min=1, max=162, value=150, step=1)
+  )
+
+renderPlot({
+     p<-ggplot(df[df$G>input$games,], aes(x=R)) + 
+    geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+    theme_bw()
+   print(p)
+})
+```
+
+```{r, echo=FALSE}
+library(shiny)
+inputPanel(
+  sliderInput('games', label="Minimum Number of Games Played:",
+              min=1, max=162, value=150, step=1),
+  
+  mainPanel(
+    htmlOutput('plot')
+  )
+)
+
+library(plotly)
+shinyServer(function(input, output) {
+  output$plot <- renderUI({
+    df <- df[df$G>input$games,]
+    p <- ggplot(df[df$G>input$games,], aes(x=R)) + 
+    geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+    theme_bw()
+    
+    py <- plotly(triddle, lsjrbob3nl, 'https://plot.ly')
+    
+    res <- py$ggplotly(p, kwargs=list(filename='Runs',
+                                      fileopt='overwrite',
+                                      auto_open=F))
+  })
+})
+
+renderPlot({
+     p<-ggplot(df[df$G>input$games,], aes(x=R)) + 
+    geom_histogram(binwidth=1, fill="#144256") +
+    ylab('Count') + xlab('Runs') +
+    theme_bw()
+   print(p)
+})
+```
+Man, that's cool.  =)
+
+So, what's the lesson here?  Just to make sure you're looking at your data.  At *every* step of the way.  You never know when you'll have done something you didn't intend to, or when some variable looks much different from the way you think it should.  In the former case, you'll need to retrace your steps to find the problem.  In the latter case, you may have to rethink your analyses.
+
+[ref1]:  <http://cran.r-project.org/web/packages/Lahman/index.html>
+[ref2]: <http://riddlet.github.io/LookingAtYourData/>
+[ref3]:  <http://riddlet.github.io/Two-Variables-One-Axis/>
