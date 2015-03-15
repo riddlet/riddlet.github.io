@@ -130,11 +130,6 @@ ggplot(df.pizza, aes(x=Carbohydratesg, y=Calories)) +
 
 
 
-{% highlight text %}
-## Warning: Removed 265 rows containing missing values (geom_point).
-## Warning: Removed 574 rows containing missing values (geom_point).
-{% endhighlight %}
-
 ![center](/../figs/nutrition.2/unnamed-chunk-51.png) 
 
 {% highlight r %}
@@ -143,12 +138,6 @@ ggplot(df.pizza, aes(x=TotalFatg, y=Calories)) +
   theme_bw()
 {% endhighlight %}
 
-
-
-{% highlight text %}
-## Warning: Removed 265 rows containing missing values (geom_point).
-## Warning: Removed 860 rows containing missing values (geom_point).
-{% endhighlight %}
 
 ![center](/../figs/nutrition.2/unnamed-chunk-52.png) 
 
@@ -159,11 +148,6 @@ ggplot(df.pizza, aes(x=Proteing, y=Calories)) +
 {% endhighlight %}
 
 
-
-{% highlight text %}
-## Warning: Removed 265 rows containing missing values (geom_point).
-## Warning: Removed 860 rows containing missing values (geom_point).
-{% endhighlight %}
 
 ![center](/../figs/nutrition.2/unnamed-chunk-53.png) 
 
@@ -179,13 +163,6 @@ ggplot(df.pizza, aes(x=Carbohydratesg, y=Calories)) +
 {% endhighlight %}
 
 
-
-{% highlight text %}
-## Warning: Removed 265 rows containing missing values (geom_point).
-## Warning: Removed 574 rows containing missing values (geom_point).
-## Warning: Removed 265 rows containing missing values (geom_path).
-## Warning: Removed 574 rows containing missing values (geom_path).
-{% endhighlight %}
 
 ![center](/../figs/nutrition.2/unnamed-chunk-6.png) 
 
