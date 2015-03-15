@@ -3,8 +3,7 @@ title: "Nested Nutrition 2"
 layout: post
 ---
 
-Last time, I examined the relationship between macronutrients and total calories in the data obtained from [menustat.org][ref1].  If you'll recall, there was something curious about a model I fit.  Here it is::
-
+Last time, I examined the relationship between macronutrients and total calories in the data obtained from [menustat.org][ref1].  If you'll recall, there was something curious about a model I fit.  Here it is:
 
 
 
