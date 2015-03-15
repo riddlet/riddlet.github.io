@@ -5,103 +5,145 @@ output: html_document
 
 I play fantasy baseball.  In some ways, I'm embarrassed to admit it.  I recall being teased for this on more than one occassion when I first started playing these games over 10 years ago.  However, I think I'm in good company today.  The Fantasy Sports Trade Association (FSTA) has estimated the number of individuals playing fantasy sports in the US and Canada at [over 41 million][ref1].  While I'm not confident that the FSTA is an unbiased party, I think that the figure is in the general ballpark of being correct.  
 
-Regardless, I'm through defending myself.  I need to figure out how I'm going to draft my players!  There are a variety of ways to obtain predictions for how individual players will do for the upcoming season.  The website [Fangraphs][ref2] includes a handy feature which allows you to download csv files of their projections.  They include projections from the ZIPS 
+Regardless, I'm through defending myself.  I need to figure out how I'm going to draft my players!  There are a variety of ways to obtain predictions for how individual players will do for the upcoming season.  The website [Fangraphs][ref2] includes a handy feature which allows you to download csv files of their projections.  They include projections from the ZIPS, and STEAMER projection systems, as well as projections collected from site users who choose to offer up predictions for players.
 
+As Nate Silver famously [demonstrated][ref3], taking an aggregate of multiple predictions is much better than looking at any individual one.  Thus, I'm going to create a projection from a relatively simple combination of these projections.
 
-```{r, warning=FALSE, echo=FALSE}
-menus<-readLines('../Data/menustat-546cf6b433804.csv')
-menus<-menus[-1]
-menus<-gsub('\t-', '', menus)
-menus<-gsub('\t', '', menus)
-menus<-read.csv(textConnection(menus)) #this takes a minute...
-submenus<-menus[,3:51] #leave 'Restuarant', 'Food Category', and 'Menu Item ID' untouched.
-submenus[]<-lapply(submenus, as.character)
-menus[,3:51]<-submenus
-
-submenus<-menus[,c(7:15, 19:51)]
-submenus[]<-lapply(submenus, as.numeric)
-menus[,c(7:15, 19:51)]<-submenus
-
-library(reshape2)
-library(stringr)
-library(plyr)
-df <- melt(menus, id.vars = c('Restaurant.', 'Food.Category.', 'Item_Name.', 
-                           'Menu_Item_ID'))
-df$year <- df$variable
-levels(df$year) <- str_match(levels(df$variable), "[0-9]{4}")
-levels(df$variable) <- gsub('\\.{1,2}', '', levels(df$variable))#remove dots
-levels(df$variable) <- gsub('[0-9]', '', levels(df$variable))#remove year
-levels(df$variable) <- gsub('\\s+$', '', levels(df$variable))#remove trailing space
-df<-dcast(df, Restaurant. + Food.Category. + Item_Name. + Menu_Item_ID + year ~ 
-           variable , value.var = 'value')
-df<-arrange(df, Restaurant., Item_Name.)
-df$Carbohydratesg[131161] <- NA
-df[75620, 16] <- 300
-df[75620, 21] <- 3
-df[75815, 16] <- 250
-df[75815, 21] <- 3
-df[122305,12] <- NA
-df[122305,11] <- NA
-df$Calories <- as.numeric(df$Calories)
-df$Proteing <- as.numeric(df$Proteing)
-df$TotalFatg <- as.numeric(df$TotalFatg)
-df$Carbohydratesg <- as.numeric(df$Carbohydratesg)
-
-library(lme4)
-names(df)[1] <- 'Restaurant'
-```
+After downloading the relevant data, I've got six csv files with the projected stats for each player for the upcoming season from each of the projection systems - one file each for pitchers and batters.  
 
 ```{r, warning=FALSE}
-m.1 <- lmer(Calories ~ Proteing + Carbohydratesg + TotalFatg + 
-       (1+Proteing+Carbohydratesg+TotalFatg|Restaurant), data=df)
-summary(m.1)
+fans.bat <- read.csv('../../../Data/Fans_batters.csv')
+steamer.bat <- read.csv('../../../Data//Steamer_batters.csv')
+zips.bat <- read.csv('../../../Data/ZIPS_batters.csv')
+fans.pit <- read.csv('../../../Data//Fans_pitchers.csv')
+steamer.pit <- read.csv('../../../Data/Steamer_pitchers.csv')
+zips.pit <- read.csv('../../../Data/ZIPS_pitchers.csv')
 ```
 
-Note that the estimates in the model are very close to what we would expect, based on the lawful relationship between each macronutrient and calories:
+With this data, I can examine the projections for the categories I'm interested in.  I'm enrolled in two leagues, and each use a slightly different scoring system.  Here are the scoring categories I'm interested in.
 
-- **Fats:** 9 kcal/gram
-- **Protiens:** 4 kcal/gram
-- **Carbohydrates:** 4 kcal/gram
+**Batters:**  R, HR, RBI, SB, OBP, 1B, 2B, 3B, BB, AVG, OBP, OPS
 
-However, it isn't perfect.  In fact, the *way* in which it isn't perfect made me a little suspicious.  Specifically, the estimates all move in the same direction one would expect if there was some kind of social desireability bias at play (i.e. higher than expected protein, lower than expected carbs & fats).  To investigate this more closely, I created an index of the random effects which is a measure of how much each restaurant's nutrition information is biased in socially desireable ways.  I refer to the index as 'reporting tendency'.  Negative numbers represent nutrition information which is more socially desireable
+**Pitchers:** W, CG, SHO, SV, K, GIDP, HLD, ERA, WHIP, PICK
+
+Some of these pitching metrics aren't available from the projections.  In particular, I'm not going to be able to forecast CG, SHO, GIDP, HLD, or PICKs.  This is a clear shortcoming, but one I'll have to accept.
+
+Regardless, in order to create an index of achievement in each of these categories (and to keep them comparable), I'm going to use standardized scores.  First, we'll create two large tables - one each for pitchers and batters with the projections from each of the three sources.
 
 ```{r}
-rf <- ranef(m.1)
-df.rf <- rf$Restaurant
-head(df.rf)
-df.rf$Proteing <- scale(df.rf$Proteing)
-df.rf$Proteing <- df.rf$Proteing*-1
-df.rf$Carbohydratesg <- scale(df.rf$Carbohydratesg)
-df.rf$TotalFatg <- scale(df.rf$TotalFatg)
+library(dplyr)
+#Rename variables so I know where they come from
+names(fans.bat)[1:24] <- paste('fans', names(fans.bat)[1:24], sep='_')
+names(steamer.bat)[1:29] <- paste('steamer', names(steamer.bat)[1:29],
+                                  sep='_')
+names(zips.bat)[1:24] <- paste('zips', names(zips.bat)[1:24], sep='_')
+#join by player id
+bat <- full_join(fans.bat, steamer.bat, by='playerid')
+bat <- full_join(bat, zips.bat, by='playerid')
 
-library(ggplot2)
-df.rf$reporting.tendency <- df.rf$Proteing + df.rf$Carbohydratesg + 
-  df.rf$TotalFatg
-ggplot(df.rf, aes(x=reporting.tendency)) + 
-  geom_histogram(binwidth=.2, fill='#144256') + 
-  theme_bw() + ylab('Count') + xlab('Reporting Tendency')
+#repeat for pitching
+names(fans.pit)[1:19] <- paste('fans', names(fans.pit)[1:19], sep='_')
+names(steamer.pit)[1:20] <- paste('steamer', names(steamer.pit)[1:20],
+                                  sep='_')
+names(zips.pit)[1:18] <- paste('zips', names(zips.pit)[1:18], sep='_')
+#join by player id
+pit <- full_join(fans.pit, steamer.pit, by='playerid')
+pit <- full_join(pit, zips.pit, by='playerid')
 ```
 
-Note that we've got a couple of clear outliers.  It could be these restaurants which are driving this pattern.  Perhaps this is another instance of the data being mis-entered.  Let's dive in and see who these two are.
+Now, we can take the average of the projections for the categories of interest.
 
 ```{r}
-df.rf[which(df.rf$reporting.tendency < -10), ]
+##Batting stats
+bat$agg.runs <- apply(bat[,c('fans_R', 'steamer_R', 'fans_R')], 1,
+                    function(x) mean(x))
+bat$agg.hr <- apply(bat[,c('fans_HR', 'steamer_HR', 'fans_HR')], 1,
+                    function(x) mean(x))
+bat$agg.rbi <- apply(bat[,c('fans_RBI', 'steamer_RBI', 'fans_RBI')], 1,
+                    function(x) mean(x))
+bat$agg.sb <- apply(bat[,c('fans_SB', 'steamer_SB', 'fans_SB')], 1,
+                    function(x) mean(x))
+bat$agg.obp <- apply(bat[,c('fans_OBP', 'steamer_OBP', 'fans_OBP')], 1,
+                    function(x) mean(x))
+#Singles are a bit trickier...
+bat$fans_1b <- bat$fans_H - (bat$fans_X2B + bat$fans_X3B + bat$fans_HR)
+bat$steamer_1b <- bat$steamer_H - (bat$steamer_X2B + bat$steamer_X3B +
+                                     bat$steamer_HR)
+bat$zips_1b <- bat$zips_H - (bat$zips_X2B + bat$zips_X3B + bat$zips_HR)
+bat$agg.1b <- apply(bat[,c('fans_1b', 'steamer_1b', 'fans_1b')], 1,
+                    function(x) mean(x))
+bat$agg.2b <- apply(bat[,c('fans_X2B', 'steamer_X2B', 'fans_X2B')], 1, 
+                    function(x) mean(x))
+bat$agg.3b <- apply(bat[,c('fans_X3B', 'steamer_X3B', 'fans_X3B')], 1,
+                    function(x) mean(x))
+bat$agg.bb <- apply(bat[,c('fans_BB', 'steamer_BB', 'fans_BB')], 1,
+                    function(x) mean(x))
+bat$agg.avg <- apply(bat[,c('fans_AVG', 'steamer_AVG', 'fans_AVG')], 1,
+                    function(x) mean(x))
+bat$agg.obp <- apply(bat[,c('fans_OBP', 'steamer_OBP', 'fans_OBP')], 1,
+                    function(x) mean(x))
+bat$agg.ops <- apply(bat[,c('fans_OPS', 'steamer_OPS', 'fans_OPS')], 1,
+                    function(x) mean(x))
+
+##Pitching stats
+pit$agg.w <- apply(pit[,c('fans_W', 'steamer_W', 'zips_W')], 1, function(x) 
+                    mean(x))
+#zips doesn't forecast saves
+pit$agg.sv <- apply(pit[,c('fans_SV', 'steamer_SV')], 1, function(x) mean(x))
+pit$agg.k <- apply(pit[,c('fans_SO', 'steamer_SO', 'zips_SO')], 1, function(x) 
+                    mean(x))
+pit$agg.era <- apply(pit[,c('fans_ERA', 'steamer_ERA', 'zips_ERA')], 1, 
+                     function(x) mean(x))
+pit$agg.whip <- apply(pit[,c('fans_WHIP', 'steamer_WHIP', 'zips_WHIP')], 1,
+                      function(x) mean(x))
 ```
 
-Remember that these random effects estimates have all been standardized, so when you see that the estimate for fat is -8.6 as it is for Round Table Pizza, that means that the random effect of total fat for Round Table is 8.6 standard deviations below the mean!  Clearly, we should examine the raw data for these two companies.  Since they both have quite a large number of items (789 for Godfather, 1266 for Round Table), I'm going to place them into their own dataframe and then look at a scatter of each macronutrient against total calories.
+
+*Note to self - look at variability across projections for players who might be bigger risks*
 
 ```{r}
-df.pizza <- rbind(df[which(df$Restaurant == "Godfather's Pizza"),],
-                      df[which(df$Restaurant == "Round Table Pizza"),])
-ggplot(df.pizza, aes(x=Carbohydratesg, y=Calories)) +
-  geom_point(color='#88301B') + facet_wrap(~Restaurant) + 
-  theme_bw()
-ggplot(df.pizza, aes(x=TotalFatg, y=Calories)) +
-  geom_point(color='#88301B') + facet_wrap(~Restaurant) +
-  theme_bw()
-ggplot(df.pizza, aes(x=Proteing, y=Calories)) +
-  geom_point(color='#88301B') + facet_wrap(~Restaurant) +
-  theme_bw()
+##Batting stats
+bat$agg.sd..runs <- apply(bat[,c('fans_R', 'steamer_R', 'fans_R')], 1,
+                    function(x) sd(x))
+bat$agg.sd.hr <- apply(bat[,c('fans_HR', 'steamer_HR', 'fans_HR')], 1,
+                    function(x) sd(x))
+bat$agg.sd.rbi <- apply(bat[,c('fans_RBI', 'steamer_RBI', 'fans_RBI')], 1,
+                    function(x) sd(x))
+bat$agg.sd.sb <- apply(bat[,c('fans_SB', 'steamer_SB', 'fans_SB')], 1,
+                    function(x) sd(x))
+bat$agg.sd.obp <- apply(bat[,c('fans_OBP', 'steamer_OBP', 'fans_OBP')], 1,
+                    function(x) sd(x))
+#Singles are a bit trickier...
+bat$fans_1b <- bat$fans_H - (bat$fans_X2B + bat$fans_X3B + bat$fans_HR)
+bat$steamer_1b <- bat$steamer_H - (bat$steamer_X2B + bat$steamer_X3B +
+                                     bat$steamer_HR)
+bat$zips_1b <- bat$zips_H - (bat$zips_X2B + bat$zips_X3B + bat$zips_HR)
+bat$agg.sd.1b <- apply(bat[,c('fans_1b', 'steamer_1b', 'fans_1b')], 1,
+                    function(x) sd(x))
+bat$agg.sd.2b <- apply(bat[,c('fans_X2B', 'steamer_X2B', 'fans_X2B')], 1, 
+                    function(x) sd(x))
+bat$agg.sd.3b <- apply(bat[,c('fans_X3B', 'steamer_X3B', 'fans_X3B')], 1,
+                    function(x) sd(x))
+bat$agg.sd.bb <- apply(bat[,c('fans_BB', 'steamer_BB', 'fans_BB')], 1,
+                    function(x) sd(x))
+bat$agg.sd.avg <- apply(bat[,c('fans_AVG', 'steamer_AVG', 'fans_AVG')], 1,
+                    function(x) sd(x))
+bat$agg.sd.obp <- apply(bat[,c('fans_OBP', 'steamer_OBP', 'fans_OBP')], 1,
+                    function(x) sd(x))
+bat$agg.sd.ops <- apply(bat[,c('fans_OPS', 'steamer_OPS', 'fans_OPS')], 1,
+                    function(x) sd(x))
+
+##Pitching stats
+pit$agg.sd.w <- apply(pit[,c('fans_W', 'steamer_W', 'zips_W')], 1, function(x) 
+                    sd(x))
+#zips doesn't forecast saves
+pit$agg.sd.sv <- apply(pit[,c('fans_SV', 'steamer_SV')], 1, function(x) sd(x))
+pit$agg.sd.k <- apply(pit[,c('fans_SO', 'steamer_SO', 'zips_SO')], 1, function(x) 
+                    sd(x))
+pit$agg.sd.era <- apply(pit[,c('fans_ERA', 'steamer_ERA', 'zips_ERA')], 1, 
+                     function(x) sd(x))
+pit$agg.sd.whip <- apply(pit[,c('fans_WHIP', 'steamer_WHIP', 'zips_WHIP')], 1,
+                      function(x) sd(x))
 ```
 
 This doesn't look like anything too fishy.  I'm guessing that the huge effect of carbs in Godfather's is being driven by the outlier way out ~175 carbs and 125 calories.  Ditto for Round Table being driven by the outlier out near 150 grams of fat.  Interestingly, the plot for carbohydrates seems to have two distinct groups in both chains, but it is esspecially pronounced for Round Table.  Note all the data points clustered together in a line that is below the larger cluster.  It looks like if we define a line that runs through the origin and the point (x=50, y=250), we can just grab the values which are below that for a sense of what these items are.  Let's give that a shot.
@@ -147,3 +189,4 @@ Checks out okay - the other years are all NA anyway.  Let's remove and refit the
 
 [ref1]:  <http://www.fsta.org/?page=Demographics>
 [ref2]:  <http://www.fangraphs.com>
+[ref3]:  <http://en.wikipedia.org/wiki/FiveThirtyEight#2012_U.S._elections>
