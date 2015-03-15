@@ -3,7 +3,7 @@ title: ""
 output: html_document
 ---
 
-Last time, I examined the relationship between macronutrients and total calories in the data obtained from [menustat.org][ref1].  If you'll recall, I made an interesting observation.  Here's the model I had fit:
+Last time, I examined the relationship between macronutrients and total calories in the data obtained from [menustat.org][ref1].  If you'll recall, there was something curious about a model I fit.  Here it is::
 
 
 ```{r, warning=FALSE, echo=FALSE}
@@ -63,8 +63,6 @@ Note that the estimates in the model are very close to what we would expect, bas
 
 However, it isn't perfect.  In fact, the *way* in which it isn't perfect made me a little suspicious.  Specifically, the estimates all move in the same direction one would expect if there was some kind of social desireability bias at play (i.e. higher than expected protein, lower than expected carbs & fats).  To investigate this more closely, I created an index of the random effects which is a measure of how much each restaurant's nutrition information is biased in socially desireable ways.  I refer to the index as 'reporting tendency'.  Negative numbers represent nutrition information which is more socially desireable
 
-*Question of interest:  What happens if I standardize the random effects versus standardize the predictors in the model?*
-
 ```{r}
 rf <- ranef(m.1)
 df.rf <- rf$Restaurant
@@ -104,7 +102,7 @@ ggplot(df.pizza, aes(x=Proteing, y=Calories)) +
   theme_bw()
 ```
 
-This doesn't look like anything too fishy.  Just a couple of huge outliers that are pretty clearly mis-entered data.  The one exception is the plot for carbs.  Round Table seems to have two distinct groups.  It looks like if we define a line that runs through the origin and the point (x=50, y=250), we can just grab the values which are below that for a sense of what these items are.  Let's give that a shot.
+This doesn't look like anything too fishy.  I'm guessing that the huge effect of carbs in Godfather's is being driven by the outlier way out ~175 carbs and 125 calories.  Ditto for Round Table being driven by the outlier out near 150 grams of fat.  Interestingly, the plot for carbohydrates seems to have two distinct groups in both chains, but it is esspecially pronounced for Round Table.  Note all the data points clustered together in a line that is below the larger cluster.  It looks like if we define a line that runs through the origin and the point (x=50, y=250), we can just grab the values which are below that for a sense of what these items are.  Let's give that a shot.
 
 ```{r}
 df.pizza$line <- 5*df.pizza$Carbohydratesg
@@ -117,11 +115,41 @@ ggplot(df.pizza, aes(x=Carbohydratesg, y=Calories)) +
 That looks okay.  Let's get everything smaller than the values in that line.
 
 ```{r}
-df.pizza[which(df.pizza$Calories < df.pizza$line),c(1, 3, 11, 12, 18, 21)]
+df.pizza[sample(which(df.pizza$Calories < df.pizza$line), 20),c(1, 3, 11, 12, 18, 21)]
 ```
 
-Ah.  Basically, this is soda, which is typically made up of nothing but carbohydrates.  
+Ah.  Basically, this is soda, which is typically made up of nothing but carbohydrates.
 
+Okay, let's remove the two crazy outliers and see about refitting the model.
+
+```{r}
+library(dplyr)
+df %>%
+  filter(TotalFatg>125) %>%
+  filter(Restaurant == "Round Table Pizza")
+df %>%
+  filter(Carbohydratesg>150) %>%
+  filter(Restaurant == "Godfather's Pizza")
+```
+
+Okay, items 72354 and 43760.  We can remove those without too much difficulty.  Let's just double check that we wont do too much damage by removing all carb and fat entires with those values.
+
+```{r}
+df[which(df$Menu_Item_ID == 43760),]
+df[which(df$Menu_Item_ID == 72354),]
+```
+
+Checks out okay - the other years are all NA anyway.  Let's remove and refit the model
+
+```{r, warning=FALSE}
+df$Carbohydratesg[which(df$Menu_Item_ID == 43760)] <- NA
+df$TotalFatg[which(df$Menu_Item_ID == 72354)] <- NA
+m.2 <- lmer(Calories ~ Proteing + Carbohydratesg + TotalFatg + 
+       (1+Proteing+Carbohydratesg+TotalFatg|Restaurant), data=df)
+summary(m.2)
+```
+
+Looks a bit better.  I guess I was making a mountain out of a mole hill.  We could continue to play the remove-the-outlier game all day, I'm sure, but I'm not really interested in doing it.
 
 
 [ref1]:  <http://api.ning.com/files/drL7ji10lw0df0UGzfzR3Wgna8ZmVV2JSf-ebXK3ggx1hTZlYsoH5*nmXIW9-QjqmRicEjoeROQZ4I*FS3FQKPxRpAZuKxwx/100_0218.JPG?width=737&height=552>
