@@ -3,7 +3,7 @@ title: "Nested Nutrition 2"
 layout: post
 ---
 
-Last time, I examined the relationship between macronutrients and total calories in the data obtained from [menustat.org][ref1].  If you'll recall, there was something curious about a model I fit.  Here it is:
+Last time, I examined the relationship between macronutrients and total calories in the data obtained from [menustat.org][ref1].  If you'll recall, there was something curious about a model I fit.  While my coefficients were close to what would be expected, they were not perfect, and the *way* in which they weren't perfect was intriguing.  Here is the model:
 
 
 
@@ -57,7 +57,7 @@ Note that the estimates in the model are very close to what we would expect, bas
 - **Protiens:** 4 kcal/gram
 - **Carbohydrates:** 4 kcal/gram
 
-However, it isn't perfect.  In fact, the *way* in which it isn't perfect made me a little suspicious.  Specifically, the estimates all move in the same direction one would expect if there was some kind of social desireability bias at play (i.e. higher than expected protein, lower than expected carbs & fats).  To investigate this more closely, I created an index of the random effects which is a measure of how much each restaurant's nutrition information is biased in socially desireable ways.  I refer to the index as 'reporting tendency'.  Negative numbers represent nutrition information which is more socially desireable
+However, it isn't perfect.  Indeed, the estimates all move in the same direction one would expect if there was some kind of social desireability bias at play (i.e. higher than expected protein, lower than expected carbs & fats).  To investigate this more closely, I created an index of the random effects which is a measure of how much each restaurant's nutrition information is biased in socially desireable ways.  I refer to the index as 'reporting tendency'.  Negative numbers represent nutrition information which is more socially desireable
 
 
 {% highlight r %}
