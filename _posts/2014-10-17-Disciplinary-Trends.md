@@ -1,6 +1,9 @@
 ---
 layout: post
 title: Disciplinary Trends
+tags:
+    - Science
+    - Data
 ---
 I have recently been thinking about how a discipline changes across the years.
 Watching such changes over the course of a long career must be simultaneously
