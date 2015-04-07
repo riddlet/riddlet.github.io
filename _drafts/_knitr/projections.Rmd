@@ -56,111 +56,248 @@ Now, we can take the average of the projections for the categories of interest.
 ```{r}
 ##Batting stats
 bat$agg.runs <- apply(bat[,c('fans_R', 'steamer_R', 'fans_R')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 bat$agg.hr <- apply(bat[,c('fans_HR', 'steamer_HR', 'fans_HR')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 bat$agg.rbi <- apply(bat[,c('fans_RBI', 'steamer_RBI', 'fans_RBI')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 bat$agg.sb <- apply(bat[,c('fans_SB', 'steamer_SB', 'fans_SB')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 bat$agg.obp <- apply(bat[,c('fans_OBP', 'steamer_OBP', 'fans_OBP')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 #Singles are a bit trickier...
 bat$fans_1b <- bat$fans_H - (bat$fans_X2B + bat$fans_X3B + bat$fans_HR)
 bat$steamer_1b <- bat$steamer_H - (bat$steamer_X2B + bat$steamer_X3B +
                                      bat$steamer_HR)
 bat$zips_1b <- bat$zips_H - (bat$zips_X2B + bat$zips_X3B + bat$zips_HR)
 bat$agg.1b <- apply(bat[,c('fans_1b', 'steamer_1b', 'fans_1b')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 bat$agg.2b <- apply(bat[,c('fans_X2B', 'steamer_X2B', 'fans_X2B')], 1, 
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 bat$agg.3b <- apply(bat[,c('fans_X3B', 'steamer_X3B', 'fans_X3B')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 bat$agg.bb <- apply(bat[,c('fans_BB', 'steamer_BB', 'fans_BB')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 bat$agg.avg <- apply(bat[,c('fans_AVG', 'steamer_AVG', 'fans_AVG')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 bat$agg.obp <- apply(bat[,c('fans_OBP', 'steamer_OBP', 'fans_OBP')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 bat$agg.ops <- apply(bat[,c('fans_OPS', 'steamer_OPS', 'fans_OPS')], 1,
-                    function(x) mean(x))
+                    function(x) mean(x, na.rm=T))
 
 ##Pitching stats
 pit$agg.w <- apply(pit[,c('fans_W', 'steamer_W', 'zips_W')], 1, function(x) 
-                    mean(x))
+                    mean(x, na.rm=T))
 #zips doesn't forecast saves
-pit$agg.sv <- apply(pit[,c('fans_SV', 'steamer_SV')], 1, function(x) mean(x))
+pit$agg.sv <- apply(pit[,c('fans_SV', 'steamer_SV')], 1, function(x) 
+                    mean(x, na.rm=T))
 pit$agg.k <- apply(pit[,c('fans_SO', 'steamer_SO', 'zips_SO')], 1, function(x) 
-                    mean(x))
+                    mean(x, na.rm=T))
 pit$agg.era <- apply(pit[,c('fans_ERA', 'steamer_ERA', 'zips_ERA')], 1, 
-                     function(x) mean(x))
+                     function(x) mean(x, na.rm=T))
 pit$agg.whip <- apply(pit[,c('fans_WHIP', 'steamer_WHIP', 'zips_WHIP')], 1,
-                      function(x) mean(x))
+                      function(x) mean(x, na.rm=T))
+
 ```
 
+I'm also going to get the standard deviation of each category, across the three sources.  I wont use it immediately, but I'm sure I'll do something with it eventually.
 
 *Note to self - look at variability across projections for players who might be bigger risks*
 
 ```{r}
 ##Batting stats
-bat$agg.sd..runs <- apply(bat[,c('fans_R', 'steamer_R', 'fans_R')], 1,
-                    function(x) sd(x))
+bat$agg.sd.runs <- apply(bat[,c('fans_R', 'steamer_R', 'fans_R')], 1,
+                    function(x) sd(x, na.rm=T))
 bat$agg.sd.hr <- apply(bat[,c('fans_HR', 'steamer_HR', 'fans_HR')], 1,
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 bat$agg.sd.rbi <- apply(bat[,c('fans_RBI', 'steamer_RBI', 'fans_RBI')], 1,
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 bat$agg.sd.sb <- apply(bat[,c('fans_SB', 'steamer_SB', 'fans_SB')], 1,
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 bat$agg.sd.obp <- apply(bat[,c('fans_OBP', 'steamer_OBP', 'fans_OBP')], 1,
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 #Singles are a bit trickier...
 bat$fans_1b <- bat$fans_H - (bat$fans_X2B + bat$fans_X3B + bat$fans_HR)
 bat$steamer_1b <- bat$steamer_H - (bat$steamer_X2B + bat$steamer_X3B +
                                      bat$steamer_HR)
 bat$zips_1b <- bat$zips_H - (bat$zips_X2B + bat$zips_X3B + bat$zips_HR)
 bat$agg.sd.1b <- apply(bat[,c('fans_1b', 'steamer_1b', 'fans_1b')], 1,
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 bat$agg.sd.2b <- apply(bat[,c('fans_X2B', 'steamer_X2B', 'fans_X2B')], 1, 
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 bat$agg.sd.3b <- apply(bat[,c('fans_X3B', 'steamer_X3B', 'fans_X3B')], 1,
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 bat$agg.sd.bb <- apply(bat[,c('fans_BB', 'steamer_BB', 'fans_BB')], 1,
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 bat$agg.sd.avg <- apply(bat[,c('fans_AVG', 'steamer_AVG', 'fans_AVG')], 1,
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 bat$agg.sd.obp <- apply(bat[,c('fans_OBP', 'steamer_OBP', 'fans_OBP')], 1,
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 bat$agg.sd.ops <- apply(bat[,c('fans_OPS', 'steamer_OPS', 'fans_OPS')], 1,
-                    function(x) sd(x))
+                    function(x) sd(x, na.rm=T))
 
 ##Pitching stats
 pit$agg.sd.w <- apply(pit[,c('fans_W', 'steamer_W', 'zips_W')], 1, function(x) 
-                    sd(x))
+                    sd(x, na.rm=T))
 #zips doesn't forecast saves
-pit$agg.sd.sv <- apply(pit[,c('fans_SV', 'steamer_SV')], 1, function(x) sd(x))
+pit$agg.sd.sv <- apply(pit[,c('fans_SV', 'steamer_SV')], 1, function(x) sd(x, na.rm=T))
 pit$agg.sd.k <- apply(pit[,c('fans_SO', 'steamer_SO', 'zips_SO')], 1, function(x) 
-                    sd(x))
+                    sd(x, na.rm=T))
 pit$agg.sd.era <- apply(pit[,c('fans_ERA', 'steamer_ERA', 'zips_ERA')], 1, 
-                     function(x) sd(x))
+                     function(x) sd(x, na.rm=T))
 pit$agg.sd.whip <- apply(pit[,c('fans_WHIP', 'steamer_WHIP', 'zips_WHIP')], 1,
-                      function(x) sd(x))
+                      function(x) sd(x, na.rm=T))
 ```
 
-This doesn't look like anything too fishy.  I'm guessing that the huge effect of carbs in Godfather's is being driven by the outlier way out ~175 carbs and 125 calories.  Ditto for Round Table being driven by the outlier out near 150 grams of fat.  Interestingly, the plot for carbohydrates seems to have two distinct groups in both chains, but it is esspecially pronounced for Round Table.  Note all the data points clustered together in a line that is below the larger cluster.  It looks like if we define a line that runs through the origin and the point (x=50, y=250), we can just grab the values which are below that for a sense of what these items are.  Let's give that a shot.
+There's one more thing to consider before I try to make some kind of an index.  Specifically, some of these categories are not simple 'counting statistics'.  That is, two batters could have the same batting average for a given week, but if one batter has 25 plate-appearances, and the second has only 5, then the batting average from the former will carry more weight than the former.  The same is true for pitchers and their ERA and WHIP.  In order to account for this, I'm going to adjust the relevant statistics for each batter by weighting them according to $x_observed/\bar{x}$, where $x$ = plate appearances and innings pitched for batters and pitchers, respectively.
 
 ```{r}
-df.pizza$line <- 5*df.pizza$Carbohydratesg
-ggplot(df.pizza, aes(x=Carbohydratesg, y=Calories)) +
-  geom_point(color='#88301B') + facet_wrap(~Restaurant) + 
-  geom_line(aes(x=Carbohydratesg, y=line), color='#144256')+
-  theme_bw()
+#Below is for fantasy fellowship
+bat$agg.pa <- apply(bat[,c('fans_PA', 'steamer_PA', 'zips_PA')], 1,
+                    function(x) mean(x, na.rm=T))
+pit$agg.ip <- apply(pit[,c('fans_IP', 'steamer_IP', 'zips_IP')], 1, 
+                     function(x) mean(x, na.rm=T))
+bat$agg.sd.pa <- apply(bat[,c('fans_PA', 'steamer_PA', 'zips_PA')], 1,
+                    function(x) sd(x, na.rm=T))
+pit$agg.sd.ip <- apply(pit[,c('fans_IP', 'steamer_IP', 'zips_IP')], 1, 
+                     function(x) sd(x, na.rm=T))
+bat$agg.pa[bat$agg.pa == 1] <- NA
+bat$pa.weight <- bat$agg.pa/mean(bat$agg.pa, na.rm=T)
+pit$agg.ip[pit$agg.ip == 1] <- NA
+pit$ip.weight <- pit$agg.ip/mean(pit$agg.ip, na.rm=T)
+
+bat$agg.runs.std <- scale(bat$agg.runs)
+bat$agg.hr.std <- scale(bat$agg.hr)
+bat$agg.rbi.std <- scale(bat$agg.rbi)
+bat$agg.sb.std <- scale(bat$agg.sb)
+bat$agg.obp.std <- scale(bat$agg.obp)
+bat$agg.w.obp.std <- scale(bat$agg.obp*bat$pa.weight)
+bat$agg.sb.cap <- bat$agg.sb.std
+bat$agg.sb.cap[which(bat$agg.sb.std > 8)] <- 8
+
+bat$talent.index <- bat$agg.runs.std + bat$agg.hr.std + bat$agg.rbi.std + bat$agg.sb.cap + bat$agg.w.obp.std
+
+pit$agg.w.std <- scale(pit$agg.w)
+pit$agg.sv.std <- scale(pit$agg.sv)*.34
+pit$agg.k.std <- scale(pit$agg.k)
+pit$agg.era.std <- scale(pit$agg.era)*-1
+pit$agg.whip.std <- scale(pit$agg.whip)*-1
+pit$agg.w.era.std <- scale(pit$agg.era/pit$ip.weight)*-1
+pit$agg.w.whip.std <- scale(pit$agg.whip/pit$ip.weight)*-1
+
+pit$talent.index <- pit$agg.w.std + pit$agg.sv.std + pit$agg.k.std + pit$agg.w.era.std + pit$agg.w.whip.std
+
+pit.length <- length(pit$fans_Name)
+bat.length <- length(bat$fans_Name)
+
+combined <- data.frame(name=c(as.character(pit$fans_Name), as.character(bat$fans_Name)),
+                        perf.index=c(pit$talent.index, bat$talent.index),
+                        std.w=c(pit$agg.w.std, rep(NA, bat.length)),
+                        std.sv=c(pit$agg.sv.std, rep(NA, bat.length)),
+                        std.k=c(pit$agg.k.std, rep(NA, bat.length)),
+                        std.era=c(pit$agg.era.std, rep(NA, bat.length)),
+                        std.whip=c(pit$agg.whip.std, rep(NA, bat.length)),
+                        std.r=c(rep(NA, pit.length), bat$agg.runs.std),
+                        std.hr=c(rep(NA, pit.length), bat$agg.hr.std),
+                        std.rbi=c(rep(NA, pit.length), bat$agg.rbi.std),
+                        std.sb=c(rep(NA, pit.length), bat$agg.sb.std),
+                        std.obp=c(rep(NA, pit.length), bat$agg.obp.std),
+                        std.w.obp=c(rep(NA, pit.length), bat$agg.w.obp.std),
+                        w=c(pit$agg.w, rep(NA, bat.length)),
+                        sv=c(pit$agg.sv, rep(NA, bat.length)),
+                        k=c(pit$agg.k, rep(NA, bat.length)),
+                        era=c(pit$agg.era, rep(NA, bat.length)),
+                        whip=c(pit$agg.whip, rep(NA, bat.length)),
+                        r=c(rep(NA, pit.length), bat$agg.runs),
+                        hr=c(rep(NA, pit.length), bat$agg.hr),
+                        rbi=c(rep(NA, pit.length), bat$agg.rbi),
+                        sb=c(rep(NA, pit.length), bat$agg.sb),
+                        obp=c(rep(NA, pit.length), bat$agg.obp),
+                        w.obp=c(rep(NA, pit.length), bat$agg.w.obp)
+                        )
 ```
 
-That looks okay.  Let's get everything smaller than the values in that line.
+Now, I need to get some more information from the web.  Let's start by getting the position of each player
 
 ```{r}
-df.pizza[sample(which(df.pizza$Calories < df.pizza$line), 20),c(1, 3, 11, 12, 18, 21)]
+library(rvest)
+library(magittr)
+library(stringr)
+library(car)
+
+url <- html('http://fantasynews.cbssports.com/fantasybaseball/rankings/h2h/overall/yearly')
+pos <- url %>% 
+  html_nodes('td:nth-child(1) td+ td') %>% 
+  html_text()
+
+POS <- str_extract(pos, "\\(\\w{1,2}\\)")
+name <- str_extract(pos, perl(".*(?=\\s.{1,3}\\()"))
+POS <- gsub('\\(', '', POS)
+POS <- gsub('\\)', '', POS)
+
+df.id <- data.frame(name = name,
+                    position = as.factor(POS))
+
+df.id$position <- recode(df.id$position, "c('LF', 'RF', 'CF')='OF'")
+
+df <- full_join(df.id, combined)
+
+df<-arrange(df, desc(perf.index))
+data<-arrange(combined, desc(name))
+names<-arrange(df.id, desc(name))
+
+write.table(df, file='projections.csv', sep = ',')
+write.table(data, file='data.csv', sep=',')
+write.table(names, file='names.csv', sep=',')
+pitchers <- df %>%
+  filter(position == 'RP' | position == 'SP')
+write.table(pitchers, file='pitchers.csv', sep=',')
+batters <- df %>%
+  filter(position != 'RP' | position!= 'SP')
+write.table(batters, file='batters.csv', sep=',')
 ```
+
+
+```{r}
+## these balls
+
+bat$agg.runs.std <- scale(bat$agg.runs)
+bat$agg.1b.std <- scale(bat$agg.1b)
+bat$agg.2b.std <- scale(bat$agg.2b)
+bat$agg.3b.std <- scale(bat$agg.3b)
+bat$agg.hr.std <- scale(bat$agg.hr)
+bat$agg.rbi.std <- scale(bat$agg.rbi)
+bat$agg.sb.std <- scale(bat$agg.sb)
+bat$agg.bb.std <- scale(bat$agg.bb)
+bat$agg.avg.std <- scale(bat$agg.avg)
+bat$agg.ops.std <- scale(bat$agg.ops)
+bat$agg.w.avg.std <- scale(bat$agg.avg*bat$pa.weight)
+bat$agg.w.ops.std <- scale(bat$agg.ops*bat$pa.weight)
+
+bat$talent.index <- bat$agg.runs.std + bat$agg.1b.std + bat$agg.2b.std + 
+  bat$agg.3b.std + bat$agg.hr.std + bat$agg.rbi.std + bat$agg.bb.std + 
+  bat$agg.sb.std + bat$agg.w.avg.std + bat$agg.w.ops.std
+
+collapsed.bat <- data.frame(name=as.character(bat$fans_Name),
+                        perf.index=bat$talent.index)
+sorted<-arrange(collapsed.bat, desc(perf.index))
+
+pit$agg.w.std <- scale(pit$agg.w)
+pit$agg.sv.std <- scale(pit$agg.sv)
+pit$agg.k.std <- scale(pit$agg.k)
+pit$agg.era.std <- scale(pit$agg.era)*-1
+pit$agg.whip.std <- scale(pit$agg.whip)*-1
+pit$agg.w.era.std <- scale(pit$agg.era/pit$ip.weight)*-1
+pit$agg.w.whip.std <- scale(pit$agg.whip/pit$ip.weight)*-1
+
+pit$talent.index <- pit$agg.w.std + pit$agg.sv.std + pit$agg.k.std + pit$agg.w.era.std + pit$agg.w.whip.std
+
+collapsed <- data.frame(name=c(as.character(pit$fans_Name), as.character(bat$fans_Name)),
+                        perf.index=c(pit$talent.index, bat$talent.index))
+sorted<-arrange(collapsed, desc(perf.index))
+
+```
+
 
 Ah.  Basically, this is soda, which is typically made up of nothing but carbohydrates.
 
