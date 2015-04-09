@@ -3,34 +3,14 @@ title: "Shameless Baseball Love"
 output: html_document
 ---
 
-I play fantasy baseball.  In some ways, I'm embarrassed to admit it.  I recall being teased for this on more than one occassion when I first started playing these games over 10 years ago.  However, I think I'm in good company today.  The Fantasy Sports Trade Association (FSTA) has estimated the number of individuals playing fantasy sports in the US and Canada at [over 41 million][ref1].  While I'm not confident that the FSTA is an unbiased party, I think that the figure is in the general ballpark of being correct.  
-
-Regardless, I'm through defending myself.  I need to figure out how I'm going to draft my players!  There are a variety of ways to obtain predictions for how individual players will do for the upcoming season.  The website [Fangraphs][ref2] includes a handy feature which allows you to download csv files of their projections.  They include projections from the ZIPS, and STEAMER projection systems, as well as projections collected from site users who choose to offer up predictions for players.
-
-As Nate Silver famously [demonstrated][ref3], taking an aggregate of multiple predictions is much better than looking at any individual one.  Thus, I'm going to create a projection from a relatively simple combination of these projections.
-
-After downloading the relevant data, I've got six csv files with the projected stats for each player for the upcoming season from each of the projection systems - one file each for pitchers and batters.  
-
-```{r, warning=FALSE}
+```{r, warning=FALSE, echo=FALSE, error=FALSE}
 fans.bat <- read.csv('../../../Data/Fans_batters.csv')
 steamer.bat <- read.csv('../../../Data//Steamer_batters.csv')
 zips.bat <- read.csv('../../../Data/ZIPS_batters.csv')
 fans.pit <- read.csv('../../../Data//Fans_pitchers.csv')
 steamer.pit <- read.csv('../../../Data/Steamer_pitchers.csv')
 zips.pit <- read.csv('../../../Data/ZIPS_pitchers.csv')
-```
 
-With this data, I can examine the projections for the categories I'm interested in.  I'm enrolled in two leagues, and each use a slightly different scoring system.  Here are the scoring categories I'm interested in.
-
-**Batters:**  R, HR, RBI, SB, OBP, 1B, 2B, 3B, BB, AVG, OBP, OPS
-
-**Pitchers:** W, CG, SHO, SV, K, GIDP, HLD, ERA, WHIP, PICK
-
-Some of these pitching metrics aren't available from the projections.  In particular, I'm not going to be able to forecast CG, SHO, GIDP, HLD, or PICKs.  This is a clear shortcoming, but one I'll have to accept.
-
-Regardless, in order to create an index of achievement in each of these categories (and to keep them comparable), I'm going to use standardized scores.  First, we'll create two large tables - one each for pitchers and batters with the projections from each of the three sources.
-
-```{r}
 library(dplyr)
 #Rename variables so I know where they come from
 names(fans.bat)[1:24] <- paste('fans', names(fans.bat)[1:24], sep='_')
@@ -49,11 +29,7 @@ names(zips.pit)[1:18] <- paste('zips', names(zips.pit)[1:18], sep='_')
 #join by player id
 pit <- full_join(fans.pit, steamer.pit, by='playerid')
 pit <- full_join(pit, zips.pit, by='playerid')
-```
 
-Now, we can take the average of the projections for the categories of interest.
-
-```{r}
 ##Batting stats
 bat$agg.runs <- apply(bat[,c('fans_R', 'steamer_R', 'fans_R')], 1,
                     function(x) mean(x, na.rm=T))
@@ -98,14 +74,6 @@ pit$agg.era <- apply(pit[,c('fans_ERA', 'steamer_ERA', 'zips_ERA')], 1,
 pit$agg.whip <- apply(pit[,c('fans_WHIP', 'steamer_WHIP', 'zips_WHIP')], 1,
                       function(x) mean(x, na.rm=T))
 
-```
-
-I'm also going to get the standard deviation of each category, across the three sources.  I wont use it immediately, but I'm sure I'll do something with it eventually.
-
-*Note to self - look at variability across projections for players who might be bigger risks*
-
-```{r}
-##Batting stats
 bat$agg.sd.runs <- apply(bat[,c('fans_R', 'steamer_R', 'fans_R')], 1,
                     function(x) sd(x, na.rm=T))
 bat$agg.sd.hr <- apply(bat[,c('fans_HR', 'steamer_HR', 'fans_HR')], 1,
@@ -147,12 +115,7 @@ pit$agg.sd.era <- apply(pit[,c('fans_ERA', 'steamer_ERA', 'zips_ERA')], 1,
                      function(x) sd(x, na.rm=T))
 pit$agg.sd.whip <- apply(pit[,c('fans_WHIP', 'steamer_WHIP', 'zips_WHIP')], 1,
                       function(x) sd(x, na.rm=T))
-```
 
-There's one more thing to consider before I try to make some kind of an index.  Specifically, some of these categories are not simple 'counting statistics'.  That is, two batters could have the same batting average for a given week, but if one batter has 25 plate-appearances, and the second has only 5, then the batting average from the former will carry more weight than the former.  The same is true for pitchers and their ERA and WHIP.  In order to account for this, I'm going to adjust the relevant statistics for each batter by weighting them according to $x_observed/\bar{x}$, where $x$ = plate appearances and innings pitched for batters and pitchers, respectively.
-
-```{r}
-#Below is for fantasy fellowship
 bat$agg.pa <- apply(bat[,c('fans_PA', 'steamer_PA', 'zips_PA')], 1,
                     function(x) mean(x, na.rm=T))
 pit$agg.ip <- apply(pit[,c('fans_IP', 'steamer_IP', 'zips_IP')], 1, 
@@ -166,20 +129,28 @@ bat$pa.weight <- bat$agg.pa/mean(bat$agg.pa, na.rm=T)
 pit$agg.ip[pit$agg.ip == 1] <- NA
 pit$ip.weight <- pit$agg.ip/mean(pit$agg.ip, na.rm=T)
 
+#we're going to only focus on the people who are predicted to score more than one
+#run.  This does away with quite a few problems
+bat <- bat[bat$agg.runs > 0,]
 bat$agg.runs.std <- scale(bat$agg.runs)
 bat$agg.hr.std <- scale(bat$agg.hr)
 bat$agg.rbi.std <- scale(bat$agg.rbi)
-bat$agg.sb.std <- scale(bat$agg.sb)
+bat$agg.sb[bat$agg.sb==0] <- .5
+log.sb <- log(bat$agg.sb)
+bat$agg.sb.std <- scale(log.sb) # log it because the skew is severe
 bat$agg.obp.std <- scale(bat$agg.obp)
 bat$agg.w.obp.std <- scale(bat$agg.obp*bat$pa.weight)
-bat$agg.sb.cap <- bat$agg.sb.std
-bat$agg.sb.cap[which(bat$agg.sb.std > 8)] <- 8
 
-bat$talent.index <- bat$agg.runs.std + bat$agg.hr.std + bat$agg.rbi.std + bat$agg.sb.cap + bat$agg.w.obp.std
+bat$talent.index <- bat$agg.runs.std + bat$agg.hr.std + bat$agg.rbi.std + bat$agg.sb.std + bat$agg.w.obp.std
 
-pit$agg.w.std <- scale(pit$agg.w)
+#only look at those with more than one strikeout
+pit <- pit[pit$agg.k > 1,]
+pit$agg.w[pit$agg.w==0] <- .5
+log.w <- log(pit$agg.w)
+pit$agg.w.std <- scale(log.w)
 pit$agg.sv.std <- scale(pit$agg.sv)*.34
-pit$agg.k.std <- scale(pit$agg.k)
+#logged because of the skew
+pit$agg.k.std <- scale(log(pit$agg.k))
 pit$agg.era.std <- scale(pit$agg.era)*-1
 pit$agg.whip.std <- scale(pit$agg.whip)*-1
 pit$agg.w.era.std <- scale(pit$agg.era/pit$ip.weight)*-1
@@ -191,7 +162,7 @@ pit.length <- length(pit$fans_Name)
 bat.length <- length(bat$fans_Name)
 
 combined <- data.frame(name=c(as.character(pit$fans_Name), as.character(bat$fans_Name)),
-                        perf.index=c(pit$talent.index, bat$talent.index),
+                        perf.index=c(scale(pit$talent.index), scale(bat$talent.index)),
                         std.w=c(pit$agg.w.std, rep(NA, bat.length)),
                         std.sv=c(pit$agg.sv.std, rep(NA, bat.length)),
                         std.k=c(pit$agg.k.std, rep(NA, bat.length)),
@@ -203,11 +174,13 @@ combined <- data.frame(name=c(as.character(pit$fans_Name), as.character(bat$fans
                         std.sb=c(rep(NA, pit.length), bat$agg.sb.std),
                         std.obp=c(rep(NA, pit.length), bat$agg.obp.std),
                         std.w.obp=c(rep(NA, pit.length), bat$agg.w.obp.std),
+                        ip=c(pit$agg.ip, rep(NA, bat.length)),
                         w=c(pit$agg.w, rep(NA, bat.length)),
                         sv=c(pit$agg.sv, rep(NA, bat.length)),
                         k=c(pit$agg.k, rep(NA, bat.length)),
                         era=c(pit$agg.era, rep(NA, bat.length)),
                         whip=c(pit$agg.whip, rep(NA, bat.length)),
+                        pa=c(rep(NA, pit.length), bat$agg.pa),
                         r=c(rep(NA, pit.length), bat$agg.runs),
                         hr=c(rep(NA, pit.length), bat$agg.hr),
                         rbi=c(rep(NA, pit.length), bat$agg.rbi),
@@ -215,11 +188,7 @@ combined <- data.frame(name=c(as.character(pit$fans_Name), as.character(bat$fans
                         obp=c(rep(NA, pit.length), bat$agg.obp),
                         w.obp=c(rep(NA, pit.length), bat$agg.w.obp)
                         )
-```
 
-Now, I need to get some more information from the web.  Let's start by getting the position of each player
-
-```{r}
 library(rvest)
 library(magittr)
 library(stringr)
@@ -245,6 +214,99 @@ df <- full_join(df.id, combined)
 df<-arrange(df, desc(perf.index))
 data<-arrange(combined, desc(name))
 names<-arrange(df.id, desc(name))
+df.pit <- subset(df, df$position=='SP' | df$position=='RP')
+df.bat <- df[-grep('.P', df$position), ]
+rownames(df.pit) <- 1:nrow(df.pit)
+rownames(df.bat) <- 1:nrow(df.bat)
+```
+
+
+I play fantasy baseball.  In some ways, I'm embarrassed to admit it.  I recall being teased for this on more than one occassion when I first started playing these games over 10 years ago.  However, I think I'm in good company today.  The Fantasy Sports Trade Association (FSTA) has estimated the number of individuals playing fantasy sports in the US and Canada at [over 41 million][ref1].  While I'm not confident that the FSTA is an unbiased party, I think that the figure is in the general ballpark of being correct.  
+
+Regardless, I'm through defending myself.  A couple of weeks ago, I drafted my players for my two teams.  In doing so, I spent some time trying to create my own projections for how individual players were going to do.  There are a variety of ways to obtain predictions for how individual players will do for the upcoming season.  The website [Fangraphs][ref2] includes a handy feature which allows you to download csv files of their projections.  They include projections from the ZIPS, and STEAMER projection systems, as well as projections collected from site users who choose to offer up predictions for players.
+
+As Nate Silver famously [demonstrated][ref3], taking an aggregate of multiple predictions is much better than looking at any individual one.  Thus, I attempted to create a projection from a relatively simple combination of these projections.
+
+In some ways, it worked out pretty well.  Here are the top pitchers spat out by my system, the index I used to rank them (higher is better) and their predicted stats.
+
+```{r}
+df.pit[1:20,c(1:3, 15:20)])
+```
+
+This seems about right.  Unfortunately, it doesn't rank relievers quite right.  We need to go way down to number 48 to find the top ranked reliever.
+
+```{r}
+df.pit[40:50, c(1:3, 15:20)]
+```
+
+It seems to do a pretty good job for hitters too:
+
+```{r}
+df.bat[1:20, c(1:3, 21:26)]
+```
+
+However, I had a real bear of a time combining these indices.  Normally I would standardize the two performance indices and then combine.  However, these indices already *are* standardized, and we're seeing somewhat different scales.  The reason?
+
+Neither one is really as normally distributed as it should be.
+
+```{r}
+library(ggplot2)
+
+ggplot(df.pit, aes(x=perf.index)) +  
+  geom_histogram(binwidth=.05, fill='#144256') + 
+  theme_bw() + ylab('Count') + xlab('Performance index') + 
+  ggtitle('Pitchers')
+
+ggplot(df.bat, aes(x=perf.index)) +  
+  geom_histogram(binwidth=.2, fill='#144256') + 
+  theme_bw() + ylab('Count') + xlab('Performance index') + 
+  ggtitle('Batters')
+```
+
+
+After downloading the relevant data, I've got six csv files with the projected stats for each player for the upcoming season from each of the projection systems - one file each for pitchers and batters.  
+
+With this data, I can examine the projections for the categories I'm interested in.  I'm enrolled in two leagues, and each use a slightly different scoring system.  Here are the scoring categories I'm interested in.
+
+**Batters:**  R, HR, RBI, SB, OBP, 1B, 2B, 3B, BB, AVG, OBP, OPS
+
+**Pitchers:** W, CG, SHO, SV, K, GIDP, HLD, ERA, WHIP, PICK
+
+Some of these pitching metrics aren't available from the projections.  In particular, I'm not going to be able to forecast CG, SHO, GIDP, HLD, or PICKs.  This is a clear shortcoming, but one I'll have to accept.
+
+Regardless, in order to create an index of achievement in each of these categories (and to keep them comparable), I'm going to use standardized scores.  First, we'll create two large tables - one each for pitchers and batters with the projections from each of the three sources.
+
+```{r}
+
+```
+
+Now, we can take the average of the projections for the categories of interest.
+
+```{r}
+
+
+```
+
+I'm also going to get the standard deviation of each category, across the three sources.  I wont use it immediately, but I'm sure I'll do something with it eventually.
+
+*Note to self - look at variability across projections for players who might be bigger risks*
+
+```{r}
+##Batting stats
+
+```
+
+There's one more thing to consider before I try to make some kind of an index.  Specifically, some of these categories are not simple 'counting statistics'.  That is, two batters could have the same batting average for a given week, but if one batter has 25 plate-appearances, and the second has only 5, then the batting average from the former will carry more weight than the former.  The same is true for pitchers and their ERA and WHIP.  In order to account for this, I'm going to adjust the relevant statistics for each batter by weighting them according to $x_observed/\bar{x}$, where $x$ = plate appearances and innings pitched for batters and pitchers, respectively.
+
+```{r}
+#Below is for fantasy fellowship
+
+```
+
+Now, I need to get some more information from the web.  Let's start by getting the position of each player
+
+```{r}
+
 
 write.table(df, file='projections.csv', sep = ',')
 write.table(data, file='data.csv', sep=',')
@@ -299,19 +361,6 @@ sorted<-arrange(collapsed, desc(perf.index))
 ```
 
 
-Ah.  Basically, this is soda, which is typically made up of nothing but carbohydrates.
-
-Okay, let's remove the two crazy outliers and see about refitting the model.
-
-```{r}
-library(dplyr)
-df %>%
-  filter(TotalFatg>125) %>%
-  filter(Restaurant == "Round Table Pizza")
-df %>%
-  filter(Carbohydratesg>150) %>%
-  filter(Restaurant == "Godfather's Pizza")
-```
 
 Okay, items 72354 and 43760.  We can remove those without too much difficulty.  Let's just double check that we wont do too much damage by removing all carb and fat entires with those values.
 
