@@ -30,3 +30,4 @@ for sign in signs:
             print url    
 
         
+itertools.permutations
