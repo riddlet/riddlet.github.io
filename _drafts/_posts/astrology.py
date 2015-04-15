@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import urllib2
 import datetime
 import pandas as pd
+import requests
 
 baseurl = 'http://nypost.com/horoscope/'
 signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 
@@ -10,24 +11,22 @@ signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra',
 start = pd.datetime(2013, 12, 01)
 end = datetime.datetime.today()
 rng = pd.date_range(start, end)
-for day in rng:
-    for sign in signs:
+
+scope = []
+
+for sign in signs:
+    for day in rng:
         url = baseurl + sign + '-' + day.strftime('%m-%d-%Y') + '/'
-        content = urllib2.urlopen(url).read()
-        soup = BeautifulSoup(content)
-        soup = soup.find('div', 'entry-content')
-        soup = soup.find('p').string
+        page = requests.get(url)
+        if not page.ok:
+            continue
+        try:
+            content = urllib2.urlopen(url).read()
+            soup = BeautifulSoup(content)
+            soup = soup.find('div', 'entry-content')
+            soup = soup.find('p').string
+            scope.append(soup)
+        except:
+            print url    
 
-
-
-url = 'http://nypost.com/horoscope/sagittarius-01-24-2014/'
-
-content = urllib2.urlopen(url).read()
-
-soup = BeautifulSoup(content)
-
-soup = soup.find('div', 'entry-content')
-
-soup = soup.find('p').string
-
-\
+        
