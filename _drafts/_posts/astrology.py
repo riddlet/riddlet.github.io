@@ -3,6 +3,7 @@ import urllib2
 import datetime
 import pandas as pd
 import requests
+import numpy as np
 
 baseurl = 'http://nypost.com/horoscope/'
 signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 
@@ -13,6 +14,8 @@ end = datetime.datetime.today()
 rng = pd.date_range(start, end)
 
 scope = []
+zodiac = []
+pub_date = []
 
 for sign in signs:
     for day in rng:
@@ -26,8 +29,9 @@ for sign in signs:
             soup = soup.find('div', 'entry-content')
             soup = soup.find('p').string
             scope.append(soup)
+            zodiac.append(sign)
+            pub_date.append(day)
         except:
-            print url    
-
-        
-itertools.permutations
+            scope.append(np.nan)   
+            zodiac.append(sign)
+            pub_date.append(day)

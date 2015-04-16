@@ -148,7 +148,8 @@ pit <- pit[pit$agg.k > 1,]
 pit$agg.w[pit$agg.w==0] <- .5
 log.w <- log(pit$agg.w)
 pit$agg.w.std <- scale(log.w)
-pit$agg.sv.std <- scale(pit$agg.sv)*.34
+pit$agg.sv.std <- NA
+pit$agg.sv.std[which(pit$agg.sv > 0)] <- scale(pit$agg.sv[which(pit$agg.sv > 0)])
 #logged because of the skew
 pit$agg.k.std <- scale(log(pit$agg.k))
 pit$agg.era.std <- scale(pit$agg.era)*-1
@@ -156,7 +157,7 @@ pit$agg.whip.std <- scale(pit$agg.whip)*-1
 pit$agg.w.era.std <- scale(pit$agg.era/pit$ip.weight)*-1
 pit$agg.w.whip.std <- scale(pit$agg.whip/pit$ip.weight)*-1
 
-pit$talent.index <- pit$agg.w.std + pit$agg.sv.std + pit$agg.k.std + pit$agg.w.era.std + pit$agg.w.whip.std
+pit$talent.index <- rowSums(pit[,c(72:74, 77,78)], na.rm=T)
 
 pit.length <- length(pit$fans_Name)
 bat.length <- length(bat$fans_Name)
@@ -166,6 +167,8 @@ combined <- data.frame(name=c(as.character(pit$fans_Name), as.character(bat$fans
                         std.w=c(pit$agg.w.std, rep(NA, bat.length)),
                         std.sv=c(pit$agg.sv.std, rep(NA, bat.length)),
                         std.k=c(pit$agg.k.std, rep(NA, bat.length)),
+                        std.w.era=c(pit$agg.w.era.std, rep(NA, bat.length)),
+                        std.w.whip=c(pit$agg.w.whip.std, rep(NA, bat.length)),
                         std.era=c(pit$agg.era.std, rep(NA, bat.length)),
                         std.whip=c(pit$agg.whip.std, rep(NA, bat.length)),
                         std.r=c(rep(NA, pit.length), bat$agg.runs.std),
@@ -211,15 +214,14 @@ df.id$position <- recode(df.id$position, "c('LF', 'RF', 'CF')='OF'")
 
 df <- full_join(df.id, combined)
 
-df<-arrange(df, desc(perf.index))
-data<-arrange(combined, desc(name))
-names<-arrange(df.id, desc(name))
 df.pit <- subset(df, df$position=='SP' | df$position=='RP')
 df.bat <- df[-grep('.P', df$position), ]
 rownames(df.pit) <- 1:nrow(df.pit)
 rownames(df.bat) <- 1:nrow(df.bat)
-```
 
+df.pit<-arrange(df.pit, desc(perf.index))
+
+```
 
 I play fantasy baseball.  In some ways, I'm embarrassed to admit it.  I recall being teased for this on more than one occassion when I first started playing these games over 10 years ago.  However, I think I'm in good company today.  The Fantasy Sports Trade Association (FSTA) has estimated the number of individuals playing fantasy sports in the US and Canada at [over 41 million][ref1].  While I'm not confident that the FSTA is an unbiased party, I think that the figure is in the general ballpark of being correct.  
 
@@ -230,18 +232,96 @@ As Nate Silver famously [demonstrated][ref3], taking an aggregate of multiple pr
 In some ways, it worked out pretty well.  Here are the top pitchers spat out by my system, the index I used to rank them (higher is better) and their predicted stats.
 
 ```{r}
-df.pit[1:20,c(1:3, 15:20)])
+df.pit[1:20,c(1:3, 17:22)]
 ```
 
-This seems about right.  Unfortunately, it doesn't rank relievers quite right.  We need to go way down to number 48 to find the top ranked reliever.
+This seems about right.  However, to find the top reliever, we need to go way down to number 58.
+
 
 ```{r}
-df.pit[40:50, c(1:3, 15:20)]
+df.pit[50:60, c(1:3, 17:22)]
 ```
+
+How did this happen?  Well, first let me say what the ranking logic is:
+
+
+$$
+  PI = Z_win + Z_save + Z_log(k) + Z_w.era + Z_w.whip
+$$
+
+Where $PI$ is the performance index, and each term represents the standardized value of the average prediction from each projection system.  $w.era$ and $w.whip$ are weighted by the ratio of $predicted innings/\mu_predicted innings$.
+
+I should say that after the above calculations, I also standardized $PI$.
+
+Just to illustrate the problem a bit better, here's the distribution for the two pitcher types:
+
+```{r}
+library(ggplot2)
+ggplot(df.pit, aes(x=perf.index, fill = position, group = position)) + 
+  geom_density(alpha = .5) + 
+  scale_fill_manual(values = c('#144256', '#88301B')) + 
+  theme_bw()
+```
+
+We can do the same for all the values which make up the index:
+
+```{r}
+library(ggplot2)
+ggplot(df.pit, aes(x=std.w, fill = position, group = position)) + 
+  geom_density(alpha = .5) + 
+  scale_fill_manual(values = c('#144256', '#88301B')) + 
+  theme_bw() + 
+  ggtitle('Wins')
+
+ggplot(df.pit, aes(x=std.sv, fill = position, group = position)) + 
+  geom_density(alpha = .5) + 
+  scale_fill_manual(values = c('#144256', '#88301B')) + 
+  theme_bw() + 
+  ggtitle('Saves')
+
+ggplot(df.pit, aes(x=std.k, fill = position, group = position)) + 
+  geom_density(alpha = .5) + 
+  scale_fill_manual(values = c('#144256', '#88301B')) + 
+  theme_bw() + 
+  ggtitle('Strikeouts')
+
+ggplot(df.pit, aes(x=std.w.era, fill = position, group = position)) + 
+  geom_density(alpha = .5) + 
+  scale_fill_manual(values = c('#144256', '#88301B')) + 
+  theme_bw() + 
+  ggtitle('Weighted ERA')
+
+ggplot(df.pit, aes(x=std.w.whip, fill = position, group = position)) + 
+  geom_density(alpha = .5) + 
+  scale_fill_manual(values = c('#144256', '#88301B')) + 
+  theme_bw() + 
+  ggtitle('Weighted WHIP')
+```
+
+What really struck me about all of this is that these plots don't really shout out as anything being wrong.  I mean, they look exactly how I might expect them to look!  Starters have more wins and strikeouts simply by virtue of pitching more innings.  Similarly, relievers are the only ones who earn points for saves.  Maybe the innings weighting is not a fair adjustment, but I tend to believe that relievers just aren't as useful, since they can't contribute to wins and strikeouts like a starter can.
 
 It seems to do a pretty good job for hitters too:
 
 ```{r}
+df.pit$w[df.pit$w==0] <- .5
+log.w <- log(df.pit$w)
+df.pit$std.w <- scale(log.w)
+df.pit$sv[df.pit$sv==0] <- .5
+log.sv <- log(df.pit$sv)
+df.pit$std.sv <- scale(log.sv)
+#[which(df.pit$sv > 0)] <- scale(df.pit$sv[which(df.pit$sv > 0)])
+#logged because of the skew
+df.pit$std.k <- scale(log(df.pit$k))
+df.pit$std.era <- scale(df.pit$era)*-1
+df.pit$std.whip <- scale(df.pit$whip)*-1
+df.pit$ip.weight <- df.pit$ip/mean(df.pit$ip, na.rm=T)
+df.pit$std.w.era <- scale(df.pit$era/df.pit$ip.weight)*-1
+df.pit$std.w.whip <- scale(df.pit$whip*-1)/df.pit$ip.weight
+
+df.pit$perf.index <- rowSums(df.pit[,c(4:8)], na.rm=T)
+
+df.pit<-arrange(df.pit, desc(perf.index))
+
 df.bat[1:20, c(1:3, 21:26)]
 ```
 
