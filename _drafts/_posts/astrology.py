@@ -18,6 +18,7 @@ zodiac = []
 pub_date = []
 
 for sign in signs:
+    print sign
     for day in rng:
         url = baseurl + sign + '-' + day.strftime('%m-%d-%Y') + '/'
         page = requests.get(url)
@@ -32,6 +33,7 @@ for sign in signs:
             zodiac.append(sign)
             pub_date.append(day)
         except:
+            print url
             scope.append(np.nan)   
             zodiac.append(sign)
             pub_date.append(day)
