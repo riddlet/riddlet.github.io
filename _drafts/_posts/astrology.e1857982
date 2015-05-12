@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "astrology.py", line 24, in <module>
+    page = requests.get(url)
+  File "/vega/opt/anaconda-2.1.0-python-2.7.8/lib/python2.7/site-packages/requests/api.py", line 59, in get
+    return request('get', url, **kwargs)
+  File "/vega/opt/anaconda-2.1.0-python-2.7.8/lib/python2.7/site-packages/requests/api.py", line 48, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/vega/opt/anaconda-2.1.0-python-2.7.8/lib/python2.7/site-packages/requests/sessions.py", line 451, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/vega/opt/anaconda-2.1.0-python-2.7.8/lib/python2.7/site-packages/requests/sessions.py", line 557, in send
+    r = adapter.send(request, **kwargs)
+  File "/vega/opt/anaconda-2.1.0-python-2.7.8/lib/python2.7/site-packages/requests/adapters.py", line 407, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', error(110, 'Connection timed out'))

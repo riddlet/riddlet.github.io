@@ -31,9 +31,11 @@ for sign in signs:
             soup = soup.find('p').string
             scope.append(soup)
             zodiac.append(sign)
-            pub_date.append(day)
+            pub_date.append(day.strftime('%m-%d-%Y'))
         except:
-            print url
             scope.append(np.nan)   
             zodiac.append(sign)
-            pub_date.append(day)
+            pub_date.append(day.strftime('%m-%d-%Y'))
+            
+for x, y, z in zip(scope, zodiac, pub_date):
+    print x + ' | ', y + ' | ', z + ' | '
