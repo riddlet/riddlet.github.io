@@ -16,11 +16,12 @@ rng = pd.date_range(start, end)
 scope = []
 zodiac = []
 pub_date = []
+sign = 'leo'
 
 for sign in signs:
     print sign
     for day in rng:
-        url = baseurl + 'cancer' + '-' + day.strftime('%m-%d-%Y') + '/'
+        url = baseurl + 'leo' + '-' + day.strftime('%m-%d-%Y') + '/'
         page = requests.get(url)
         if not page.ok:
             continue
@@ -41,4 +42,4 @@ df = pd.DataFrame({'horoscope' : scope,
                    'zodiac' : zodiac,
                    'pub_date' : pub_date})
                    
-df.to_csv('cancer.csv', sep='|')
+df.to_csv('leo.csv', sep='|')
