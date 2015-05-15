@@ -20,7 +20,7 @@ pub_date = []
 for sign in signs:
     print sign
     for day in rng:
-        url = baseurl + sign + '-' + day.strftime('%m-%d-%Y') + '/'
+        url = baseurl + 'cancer' + '-' + day.strftime('%m-%d-%Y') + '/'
         page = requests.get(url)
         if not page.ok:
             continue
@@ -37,5 +37,8 @@ for sign in signs:
             zodiac.append(sign)
             pub_date.append(day.strftime('%m-%d-%Y'))
             
-for x, y, z in zip(scope, zodiac, pub_date):
-    print x + ' | ', y + ' | ', z + ' | '
+df = pd.DataFrame({'horoscope' : scope,
+                   'zodiac' : zodiac,
+                   'pub_date' : pub_date})
+                   
+df.to_csv('cancer.csv', sep='|')
