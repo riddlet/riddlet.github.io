@@ -4,6 +4,7 @@ import datetime
 import pandas as pd
 import requests
 import numpy as np
+import os
 
 baseurl = 'http://nypost.com/horoscope/'
 signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 
@@ -43,3 +44,18 @@ df = pd.DataFrame({'horoscope' : scope,
                    'pub_date' : pub_date})
                    
 df.to_csv('pisces.csv', sep='|')
+
+scopes = []
+for f in os.listdir('./../data/horoscopes'):
+    df=pd.read_csv('./../data/horoscopes/' + f, sep='|')
+    df['astrosign'] = f
+    scopes.append(df)
+frame=pd.concat(scopes)
+
+for i, s in enumerate(df.astrosign):
+    df.zodiac.iloc[i] = s[:-4]
+
+df = df.drop('astrosign', 1)
+df = df.drop('Unnamed: 0', 1)
+
+df.to_csv('astrosign.csv', sep='|')
