@@ -57,36 +57,37 @@ To solve the former problem, we'll turn to the python module
 nice way to ping a webpage and see if it answers back.
 
 
-    import requests
-    url = 'http://nypost.com/horoscope/aries-12-01-2013/'
-    page = requests.get(url)
+{% highlight python %}
+import requests
+url = 'http://nypost.com/horoscope/aries-12-01-2013/'
+page = requests.get(url)
+{% endhighlight %}
 
 Now, this new variable, page, has a method that tells us if the page responded
 appropriately:
 
+{% highlight python %}
+page.ok
+{% endhighlight %}
 
-    page.ok
-
-
-
-
-    True
-
+{% highlight text %}
+## True
+{% endhighlight %}
 
 
 If, on the other hand, we try to visit a bad page, we get something slightly
 different:
 
+{% highlight python %}
+#doesn't exist because it hasn't happened!
+url = 'http://nypost.com/horoscope/aries-12-01-2015/'
+page = requests.get(url)
+page.ok
+{% endhighlight %}
 
-    url = 'http://nypost.com/horoscope/aries-12-01-2015/' #doesn't exist because it hasn't happened!
-    page = requests.get(url)
-    page.ok
-
-
-
-
-    False
-
+{% highlight text %}
+## False
+{% endhighlight %}
 
 
 Great! We've solved the first problem. For the second, we need two things.
@@ -108,18 +109,19 @@ the information we want.
 *Confession: These two things always involve a lot of trial-and-error for me.
 I'm no expert on this stuff. I just use them as tools to greater ends*
 
-
-    import urllib2
-    from bs4 import BeautifulSoup
-    url = 'http://nypost.com/horoscope/aries-12-01-2013/'
-    content = urllib2.urlopen(url).read() #Get the actual html content of the webpage
-    soup = BeautifulSoup(content)
-    soup = soup.find('div', 'entry-content')
-    soup = soup.find('p').string
-    print soup
-
-    You’re not the sort to play safe and even if you have been a bit more cautious than usual in recent weeks you will more than make up for it over the next few days. Plan your new adventure today and start working on it tomorrow.
-
+{% highlight python %}
+import urllib2
+from bs4 import BeautifulSoup
+url = 'http://nypost.com/horoscope/aries-12-01-2013/'
+content = urllib2.urlopen(url).read() #Get the actual html content of the webpage
+soup = BeautifulSoup(content)
+soup = soup.find('div', 'entry-content')
+soup = soup.find('p').string
+print soup
+{% endhighlight %}
+{% highlight text %}
+## You’re not the sort to play safe and even if you have been a bit more cautious than usual in recent weeks you will more than make up for it over the next few days. Plan your new adventure today and start working on it tomorrow.
+{% endhighlight %}
 
 There we are! That's the stuff we wanted! Now we can put all this stuff together
 to scrape all the data we want. I tried to do this a couple of times, but the
@@ -131,49 +133,50 @@ in pipe-delimited format
 [here](http://sparrowlab.psych.columbia.edu/tar/data/astrosign.csv). Next time,
 I'll do some actual work with these data.
 
+{% highlight python %}
+from bs4 import BeautifulSoup
+import urllib2
+import datetime
+import pandas as pd
+import requests
+import numpy as np
+import os
+    
+baseurl = 'http://nypost.com/horoscope/'
+signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 
+         'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces']
+    
+start = pd.datetime(2013, 12, 01)
+end = datetime.datetime.today()
+rng = pd.date_range(start, end)
 
-    from bs4 import BeautifulSoup
-    import urllib2
-    import datetime
-    import pandas as pd
-    import requests
-    import numpy as np
-    import os
-    
-    baseurl = 'http://nypost.com/horoscope/'
-    signs = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 
-             'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces']
-    
-    start = pd.datetime(2013, 12, 01)
-    end = datetime.datetime.today()
-    rng = pd.date_range(start, end)
-    
-    scope = []
-    zodiac = []
-    pub_date = []
-    
-    for sign in signs:
-        print sign
-        for day in rng:
-            url = baseurl + sign + '-' + day.strftime('%m-%d-%Y') + '/'
-            page = requests.get(url)
-            if not page.ok:
-                continue
-            try:
-                content = urllib2.urlopen(url).read()
-                soup = BeautifulSoup(content)
-                soup = soup.find('div', 'entry-content')
-                soup = soup.find('p').string
-                scope.append(soup)
-                zodiac.append(sign)
-                pub_date.append(day.strftime('%m-%d-%Y'))
-            except:
-                scope.append(np.nan)   
-                zodiac.append(sign)
-                pub_date.append(day.strftime('%m-%d-%Y'))
-                
-    df = pd.DataFrame({'horoscope' : scope,
-                       'zodiac' : zodiac,
-                       'pub_date' : pub_date})
-                       
-    df.to_csv('astroscope.csv', sep='|')
+scope = []
+zodiac = []
+pub_date = []
+
+for sign in signs:
+    print sign
+    for day in rng:
+        url = baseurl + sign + '-' + day.strftime('%m-%d-%Y') + '/'
+        page = requests.get(url)
+        if not page.ok:
+            continue
+        try:
+            content = urllib2.urlopen(url).read()
+            soup = BeautifulSoup(content)
+            soup = soup.find('div', 'entry-content')
+            soup = soup.find('p').string
+            scope.append(soup)
+            zodiac.append(sign)
+            pub_date.append(day.strftime('%m-%d-%Y'))
+        except:
+            scope.append(np.nan)   
+            zodiac.append(sign)
+            pub_date.append(day.strftime('%m-%d-%Y'))
+            
+df = pd.DataFrame({'horoscope' : scope,
+                   'zodiac' : zodiac,
+                   'pub_date' : pub_date})
+                   
+df.to_csv('astroscope.csv', sep='|')
+{% endhighlight %}
