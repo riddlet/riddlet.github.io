@@ -3,7 +3,7 @@ title: "Modeling Horoscope Language"
 layout: post
 ---
 
-In the [last post](http://), I described my efforts at grabbing some data from a web site.
+In the [last post](http://riddlet.github.io/Scraping-Horoscopes/), I described my efforts at grabbing some data from a web site.
 Specifically, I scraped daily horoscopes from NYpost for a period of about a
 year and a half. While I have an admittedly poor understanding of astrology, I
 do know that each astrological sign is supposed confer some unique dispositional
@@ -31,11 +31,11 @@ corresponds to.
 First, we'll read in the data and look at the first few rows.
 
 {% highlight python %}
-    import pandas as pd
-    df = pd.read_csv('./../data/astrosign.csv', sep='|')
-    df = df.drop('Unnamed: 0', 1)
-    df = df.dropna()
-    df.head()
+import pandas as pd
+df = pd.read_csv('./../data/astrosign.csv', sep='|')
+df = df.drop('Unnamed: 0', 1)
+df = df.dropna()
+df.head()
 {% endhighlight %}
 
 ![scope data](/images/2015_7_15/scopedf.png)
@@ -53,10 +53,10 @@ a simple count of the number of times a given word appears in a given document.
 In scikit learn, all this is done in two short lines.
 
 {% highlight python %}
-    from sklearn.feature_extraction.text import CountVectorizer
-    cv = CountVectorizer()
-    wordcounts = cv.fit_transform(df['horoscope'])
-    wordcounts
+from sklearn.feature_extraction.text import CountVectorizer
+cv = CountVectorizer()
+wordcounts = cv.fit_transform(df['horoscope'])
+wordcounts
 {% endhighlight %}
 
 
@@ -84,17 +84,17 @@ relationship between the text and the zodiac labels in the same way you would
 wait to show a student some examples until the final exam.
 
 {% highlight python %}
-    from sklearn.cross_validation import train_test_split
-    from sklearn import svm
-    
-    scope_train, scope_test, sign_train, sign_true = \
-        train_test_split(wordcounts, 
-                         df['zodiac'], 
-                         test_size=.3, 
-                         random_state=42)
-    
-    clf = svm.LinearSVC()
-    clf.fit(scope_train, sign_train)
+from sklearn.cross_validation import train_test_split
+from sklearn import svm
+
+scope_train, scope_test, sign_train, sign_true = \
+    train_test_split(wordcounts, 
+                     df['zodiac'], 
+                     test_size=.3, 
+                     random_state=42)
+
+clf = svm.LinearSVC()
+clf.fit(scope_train, sign_train)
 {% endhighlight %}
 {% highlight text %}
 ##                 precision    recall  f1-score   support
@@ -122,11 +122,11 @@ horoscopes and see how well it can place them as Aquarius or Pisces or what have
 you.
 
 {% highlight python %}
-    from sklearn import metrics
+from sklearn import metrics
     
-    predicted = clf.predict(scope_test)
-    scores = metrics.classification_report(sign_true, predicted)
-    print scores
+predicted = clf.predict(scope_test)
+scores = metrics.classification_report(sign_true, predicted)
+print scores
 {% endhighlight %}
 {% highlight text %}
 ##                 precision    recall  f1-score   support
@@ -171,9 +171,9 @@ shuffled label. In other words, this would give us a way to evaluate what chance
 performance looks like.
 
 {% highlight python %}
-    import numpy as np
-    df['shuffled_zodiac'] = np.random.permutation(df.zodiac)
-    df.head()
+import numpy as np
+df['shuffled_zodiac'] = np.random.permutation(df.zodiac)
+df.head()
 {% endhighlight %}
 
 
@@ -181,17 +181,17 @@ performance looks like.
 
 
 {% highlight python %}
-    scope_train, scope_test, sign_train, sign_true = \
-        train_test_split(wordcounts, 
-                         df['shuffled_zodiac'], 
-                         test_size=.3, 
-                         random_state=42)
+scope_train, scope_test, sign_train, sign_true = \
+    train_test_split(wordcounts, 
+                     df['shuffled_zodiac'], 
+                     test_size=.3, 
+                     random_state=42)
     
-    clf = svm.LinearSVC()
-    clf.fit(scope_train, sign_train)
-    predicted = clf.predict(scope_test)
-    scores = metrics.classification_report(sign_true, predicted)
-    print scores
+clf = svm.LinearSVC()
+clf.fit(scope_train, sign_train)
+predicted = clf.predict(scope_test)
+scores = metrics.classification_report(sign_true, predicted)
+print scores
 {% endhighlight %}
 {% highlight python %}
 ##                 precision    recall  f1-score   support
@@ -225,24 +225,24 @@ we can improve above chance. The implementation is not so different from the SVM
 we just tried.
 
 {% highlight python %}
-    from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier
     
-    #the RF classifier doesn't take the sparse numpy array we used before, 
-    #so we just have to turn it into a regular array. This doesn't change 
-    #the values at all, it just changes the internal representation.
-    wcarray = wordcounts.toarray()
+#the RF classifier doesn't take the sparse numpy array we used before, 
+#so we just have to turn it into a regular array. This doesn't change 
+#the values at all, it just changes the internal representation.
+wcarray = wordcounts.toarray()
     
-    scope_train, scope_test, sign_train, sign_true = \
-        train_test_split(wcarray, 
-                         df['zodiac'], 
-                         test_size=.3, 
-                         random_state=42)
+scope_train, scope_test, sign_train, sign_true = \
+    train_test_split(wcarray, 
+                     df['zodiac'], 
+                     test_size=.3, 
+                     random_state=42)
     
-    clf = RandomForestClassifier()
-    clf.fit(scope_train, sign_train)
-    predicted = clf.predict(scope_test)
-    scores = metrics.classification_report(sign_true, predicted)
-    print scores
+clf = RandomForestClassifier()
+clf.fit(scope_train, sign_train)
+predicted = clf.predict(scope_test)
+scores = metrics.classification_report(sign_true, predicted)
+print scores
 {% endhighlight %}
 {% highlight text %}
 ##                 precision    recall  f1-score   support
