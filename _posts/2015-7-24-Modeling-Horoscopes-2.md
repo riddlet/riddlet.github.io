@@ -4,7 +4,7 @@ layout: post
 ---
 
 This is a continuation of a series of blog posts in which I work with some
-horoscopes I scraped from the New York Posts's website. In the [last post], I
+horoscopes I scraped from the New York Posts's website. In the [last post](http://riddlet.github.io/Modeling-Horoscopes/), I
 showed that the language didn't really contain any information that would allow
 us to identify which sign the particular horoscope came from. However, that
 doesn't mean the language doesn't contain *any* information.
