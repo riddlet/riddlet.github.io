@@ -1,5 +1,7 @@
 ---
 layout: default
+title: Travis Riddle
+permalink: /blog/
 ---
 
 <div class="posts">
