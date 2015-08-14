@@ -17,7 +17,8 @@ permalink: /blog/
       <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
     </article>
   {% endfor %}
-
+<br><br>
+<b>Archives</b>
   {% for post in site.posts offset:1 %}
   	<li><a href="{{ site.base_url }}{{ post.url }}">{{ post.title }}</a>
   	<span>{{ post.date | date_to_string }}</span></li>
