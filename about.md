@@ -1,15 +1,7 @@
 ---
-layout: page
+layout: default
 title: About
 permalink: /about/
 ---
 
-Some information about you!
-
-### More Information
-
-A place to include any other types of information that you'd like to include about yourself. 
-
-### Contact me
-
-[email@domain.com](mailto:email@domain.com)
+I'm a postdoc working with the [LIRSM lab](http://www.columbia.edu/cu/psychology/vpvaughns/) and [CCLS](ccls.columbia.edu) at Columbia University. I'm a computational social scientist interested in psychology, human-computer interaction, and how psychological processes manifest themselves in written text.
