@@ -7,7 +7,7 @@ One powerful tool in an analyst's toolbox is simulation. If you're ever unsure a
 
 
 ### Statistical models
-Suppose we run an experiment with a control group and an experimental group. If you read a statistics textbook, it will tell you that this can be described a model that takes the form of an equation like this:
+Suppose we run an experiment with a control group and an experimental group. If you read a statistics textbook, it will tell you that this can be described as a model that takes the form of an equation like this:
 
 $$
 Y_i = \beta_0 + \beta_{1}X_i + \epsilon_i
