@@ -57,7 +57,7 @@ VCV
 ## Z  0.2  0.7  1.0
 {% endhighlight %}
 
-Great, having done this, we can use the 'mvrnorm' function to turn this into observed variables. This function takes three arguments - the number of observations, the mean of each variable, and the matrix we just created and returns vectors of observations for each variable you're generating.  Here's an example:
+Great, having done this, we can use the `mvrnorm` function to turn this into observed variables. This function takes three arguments - the number of observations, the mean of each variable, and the matrix we just created and returns vectors of observations for each variable you're generating.  Here's an example:
 
 
 {% highlight r %}
