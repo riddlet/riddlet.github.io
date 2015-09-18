@@ -1,6 +1,6 @@
 ---
-title: "Simulating Correlated Predictors"
-output: html_document
+title: "Simulating outcomes"
+layout: post
 ---
 
 I recently described in this space how to generate correlated predictors. What I didn't show was how to take those correlated predictors and use them to generate some observed outcomes. Once we've learned how to do this, we can take this general idea and begin toying around with the structure of the data to see how it changes (or doesn't change) our estimation process. 
@@ -45,7 +45,8 @@ $$
 
 As last time, we will set $X_{1}$ and $X_{2}$ to not be correlated, $X_{1}$ and $X_{3}$ will be slightly correlated, and $X_{2}$ and $X_{3}$ to have a strong correlation.
 
-```{r}
+
+{% highlight r %}
 library(compiler)
 library(corpcor)
 library(MASS)
@@ -59,17 +60,31 @@ VCV <- matrix(c(1, 0, .2,
                 .2, .7, 1), nrow=3, ncol=3)
 rownames(VCV) <- c('X1', 'X2', 'X3')
 VCV
+{% endhighlight %}
 
+
+
+{% highlight text %}
+##    [,1] [,2] [,3]
+## X1  1.0  0.0  0.2
+## X2  0.0  1.0  0.7
+## X3  0.2  0.7  1.0
+{% endhighlight %}
+
+
+
+{% highlight r %}
 #Generate predictors
 dat <- as.data.frame(mvrnorm(n = n, mu = rep(0, 3), Sigma = VCV))
-```
+{% endhighlight %}
 
 Now we need to indicate the parameters for the linear function described above. We can store these parameters in a vector, and then multiply the values in that vector by the observed values for $X_{1}$, $X_{2}$, and $X_{3}$, and use the `rnorm` function to draw random observations from a normal distribution defined by the Equation 2 above.
 
-```{r}
+
+{% highlight r %}
 params <- c(.5, 2, -1.5)
 y <- rnorm(n=dim(dat)[1], mean=(1 + as.matrix(dat) %*% params), 5)
-```
+{% endhighlight %}
 
 Let's break that second line down a little bit. The function `rnorm` generates $n$ random numbers from a normal distribution described by a mean and a standard deviation. To use it, we need to give it the mean, the standard deviation, and $n$.
 
@@ -77,12 +92,37 @@ We set $n$ to be the length of our predictors dataframe, `dim(dat)[1]`. For the 
 
 To check how well the simulated data fits the function that generated it, we can fit a linear model. We should recover something close to out parameters indicated in Equation 2.
 
-```{r}
+
+{% highlight r %}
 summary(lm(y~dat$X1+dat$X2+dat$X3))
-```
+{% endhighlight %}
 
 
-We'll continue with the series of posts on simulation next time, taking this approach a step or two closer to running a full simulation study.
 
-This post was helped along considerably by a very instructive page on simulating multilevel data on the [UCLA website](http://www.ats.ucla.edu/stat/r/pages/mesimulation.htm).
+{% highlight text %}
+## 
+## Call:
+## lm(formula = y ~ dat$X1 + dat$X2 + dat$X3)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.9720 -2.9335 -0.5192  3.0941 11.6400 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)   
+## (Intercept)   1.1575     0.4457   2.597  0.01088 * 
+## dat$X1        0.4409     0.4949   0.891  0.37523   
+## dat$X2        1.6325     0.6124   2.666  0.00902 **
+## dat$X3       -1.4410     0.6769  -2.129  0.03581 * 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 4.434 on 96 degrees of freedom
+## Multiple R-squared:  0.07374,	Adjusted R-squared:  0.04479 
+## F-statistic: 2.547 on 3 and 96 DF,  p-value: 0.06042
+{% endhighlight %}
+
+Pretty close!
+
+Having created a set of steps that will simulate data, we can now use these steps to investigate if there is any systematic problem when we, for example, change the degree to which two predictors are correlated.
 

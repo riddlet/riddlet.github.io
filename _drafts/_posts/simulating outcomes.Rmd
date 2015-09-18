@@ -1,5 +1,5 @@
 ---
-title: "Simulating Correlated Predictors"
+title: "Simulating outcomes"
 output: html_document
 ---
 
@@ -81,8 +81,7 @@ To check how well the simulated data fits the function that generated it, we can
 summary(lm(y~dat$X1+dat$X2+dat$X3))
 ```
 
+Pretty close!
 
-We'll continue with the series of posts on simulation next time, taking this approach a step or two closer to running a full simulation study.
-
-This post was helped along considerably by a very instructive page on simulating multilevel data on the [UCLA website](http://www.ats.ucla.edu/stat/r/pages/mesimulation.htm).
+Having created a set of steps that will simulate data, we can now use these steps to investigate if there is any systematic problem when we, for example, change the degree to which two predictors are correlated.
 
