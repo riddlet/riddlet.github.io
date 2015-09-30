@@ -12,7 +12,7 @@ Riddle, T.A., Cook, J.E., Reddy, K., Cohen, G., Garcia, J. & Purdie-Vaughns, V. 
 #### Published
 Riddle, T.A., Lau, H., Sparrow, B.  (2015).  Reporting on the temporal properties of visual events masked with continuous flash suppression. Consciousness & Cognition, 36, 154-168. \[[osf](https://osf.io/ehd7a/)\]
 
-Riddle, T.A., Bhagavatula, S., Guo, W., Muresan, S., Cohen, G., Cook, J. & Purdie-Vaughns, V.  (2015).  Mining a written values affirmation to identify the unique linguistic features of stigmatized groups.  In Proceedings of the 8th international Conference on Educational Data Mining.  International Educational Data Mining Society. \[[pdf](../docs/edm_2015.pdf)\]
+Riddle, T.A., Bhagavatula, S., Guo, W., Muresan, S., Cohen, G., Cook, J. & Purdie-Vaughns, V.  (2015).  Mining a written values affirmation to identify the unique linguistic features of stigmatized groups.  In Proceedings of the 8th international Conference on Educational Data Mining.  International Educational Data Mining Society. \[[pdf](/../docs/edm_2015.pdf)\]
 
 Riddle, T.A., Rosen, H.J., & Morsella, E. (In press).  Is that me? Sense of agency as a function of intra-psychic conflict.  Journal of Mind and Behavior	
 
