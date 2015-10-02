@@ -3,25 +3,11 @@ title: "Simulation"
 layout: post
 ---
 
-We previously learned how to run a toy simulation. We described a straightforward linear model with an intercept and one slope parameter, generated some data, and found that if we simulated drawing data from the model described, the estimated slope and intercept converged onto the true values. That is, we saw no evidence of bias in our estimates. If the slope and intercept had converged to some values other than the ones we used to generate the data, then that would have indicated that our estimation methods were biased.
-
-We can also use this tool to investigate questions of power. For instance, recall that the first model we fit to simulated data had coefficients that were much different. In fact, we were not able to reject the null hypothesis that the slope and intercept were different than zero (according to the generative model, they are). This happens because we're dealing with noisy data and small sample sizes - a problem that plagues psychological research. This allows researchers to find evidence for effects that aren't true (or at least aren't as strong as they suggest), as well as to fail to find evidence for an effect that does exist (or suggest that the effect isn't as strong as it really is). The technical language for these statistical phenomena are type I and type II errors respectively (incorrect conclusions about the strength of the evidence are sometimes referred to as type M errors).
-
-So let's say we run an experiment, and we see some difference between our groups. How often will that difference reach the level of statistical significance, given the set-up of our experiment?
-
-Recall that we set up a model described as 
-
-$$
-Y_i = 3 + 6*X_i + \epsilon_i
-$$
-
-Where $$\epsilon_{i} \sim N(0, 10)$$
-
 One powerful tool in an analyst's toolbox is simulation. If you're ever unsure about whether you can safely do some procedure or if modeling your data in a certain way is a good or bad idea, you can often get your answer through running a simulation. Unfortunately, I don't think psychologists generally, receive the training needed to incorporate this into their workflow. That's too bad, because it really is powerful. So, this is a primer on how to simulate. We'll start with a relatively easy example. Before digging into the computation, however, we need to understand what it means to model data.
 
 
 ### Statistical models
-Suppose we run an experiment with a control group and an experimental group. If you read a statistics textbook, it will tell you that this can be described as a model that takes the form of an equation like this:
+Suppose we run an experiment with a control group and an experimental group. If you read a statistics textbook, it will tell you that this can be described a model that takes the form of an equation like this:
 
 $$
 Y_i = \beta_0 + \beta_{1}X_i + \epsilon_i
@@ -118,7 +104,7 @@ $$
 10 = \beta_0 + \beta_{1}*1 + \epsilon_i \\
 $$
 
-Great, now we can try to find some good values to plug in here. Let's first tackle $$\beta_0$$. This term is typically called the intercept or the constant. Because we have chosen to use a dummy code for $$X$$ (i.e. zero and one), that means that the intercept is the value $$Y$$ takes when $$X$$ is zero. That means we're looking at the values for $$Y_1$$ and $$Y_2$$. They aren't identical, but taking their average is a pretty good way of describing them on the whole altogether. In this case, the average is 3, so let's plug this into our system:
+Great, now we can try to find some good values to plug in here. Let's first tackle $\beta_0$. This term is typically called the intercept or the constant. Because we have chosen to use a dummy code for $$X$$ (i.e. zero and one), that means that the intercept is the value $Y$ takes when $X$ is zero. That means we're looking at the values for $$Y_1$$ and $$Y_2$$. They aren't identical, but taking their average is a pretty good way of describing them on the whole altogether. In this case, the average is 3, so let's plug this into our system:
 
 $$
 2 = 3 + \epsilon_i \\
@@ -267,7 +253,7 @@ summary(m.1)
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 12.2 on 38 degrees of freedom
-## Multiple R-squared:  0.00334,	Adjusted R-squared:  -0.0229 
+## Multiple R-squared:  0.00334,  Adjusted R-squared:  -0.0229 
 ## F-statistic: 0.127 on 1 and 38 DF,  p-value: 0.723
 {% endhighlight %}
 
