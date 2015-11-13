@@ -16,9 +16,9 @@ What are ragged arrays? It arises in an analytic situation where you have differ
 | 3   |  3.8  |  4.0  |  2.9  |  3.3  |       |
 | 4   |  2.7  |  2.5  |  2.3  |       |       |
 
-Each of our subjects here has different numbers of observations. After lamenting Stan's inability to automatically handle this, they provide the following syntax as a suggested way to handle this:
+Each of our subjects here has different numbers of observations. After lamenting Stan's inability to automatically handle this, the developers provide the following syntax as a suggested work around:
 
-```
+{% highlight c++ %}
 data {
 int<lower=0> N; // # observations
 int<lower=0> K; // # of groups
@@ -32,13 +32,13 @@ for (k in 1:K) {
 segment(y, pos, s[k]) ~ normal(mu[k], sigma);
 pos <- pos + s[k];
 }
-```
+{% endhighlight %}
 
-They key bit there comes from the last three lines. It seems like they're breaking `y` into individual-level chunks and stating that the observed values are sampled from the individual-level estimate of `mu`. I tried implementing something similar (using the segment function) and was not able to get it to run. However, I was able to work around it.
+They key bit there comes from the last three lines. It seems like they're breaking `y` into individual-level chunks and stating that the observed values are sampled from the individual-level estimate of `mu`. I tried implementing something similar (using the segment function) and was not able to get it to run. Instead, I used a different trick that seems to accomplish the same thing.
 
 Here's the model block:
 
-```
+{% highlight c++ %}
 model {
   vector[n] nu;
   int pos;
@@ -63,8 +63,8 @@ model {
   }
   y ~ normal(nu, sigma);
 }
-```
+{% endhighlight %}
 
-So, let's look at it from the inside out. First, the observed data, `y`, are sampled from a normal centered on `nu` with variance `sigma`. We define the center of nu for each participant with this line `nu[pos] <- intercept[i] + b_time[i]*t[pos];`. This is nested inside a while loop so that we have a value for each time point for each individual, regardless of how many observations that person has. This value is a function of an intercept and a slope coefficient for time, each of which are subject-specific and are sampled from their respective prior distributions (`mu_time ~ normal(0, 10)` and `mu_int ~ normal(0,10)`). This runs! Also, the parameters make sense and look about right.
+So, let's look at it from the inside out. First, the observed data, `y`, are sampled from a normal centered on `nu` with variance `sigma`. We define nu for each participant with this line `nu[pos] <- intercept[i] + b_time[i]*t[pos];`. This is nested inside a while loop so that we have a value for each time point for each individual, regardless of how many observations that person has. This value is a function of an intercept and a slope coefficient for time, each of which are subject-specific and are sampled from their respective prior distributions (`mu_time ~ normal(0, 10)` and `mu_int ~ normal(0,10)`). This runs! Also, the parameters make sense and look about right.
 
 If there's a way of getting this to run with the segment function, I'd like to see it. I couldn't make it happen to save my life.
