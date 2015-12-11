@@ -1,0 +1,10 @@
+---
+title: "Reverse Engineering summary scores"
+layout: post
+---
+
+Don't do it.
+
+Situation: You've got some summary scores (e.g. means) for a dataset. You don't know what variables in the original data went into those summary scores, but you're confident the information is there.
+
+I spent two days this week trying to figure out a way to computationally reverse-engineer the process that lead to the summary scores in question. Brute-forcing this wont work, because if you've got even a moderately sized set of variables to choose from and more than a few variables that could make up the score, then you're going to approach really big numbers really really quickly. The 
