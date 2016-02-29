@@ -10,3 +10,5 @@ package.json
 _drafts/_knitr/.Rhistory
 
 *.csv
+
+_drafts/data/US.txt
