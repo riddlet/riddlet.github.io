@@ -7,14 +7,18 @@ permalink: /publications/
 ### Manuscripts  
 
 #### In preparation  
-Riddle, T.A., Cook, J.E., Reddy, K., Cohen, G., Garcia, J. & Purdie-Vaughns, V. (in prep). Group affirmations
+Riddle, T.A., Muresan, S. Cook, J.E., Cohen, G., Garcia, J. & Purdie-Vaughns, V. (in prep). The surprising effectiveness of values affirmations
+
+Riddle, T.A., Muresan, S. Cook, J.E., Cohen, G., Garcia, J. & Purdie-Vaughns, V. (in prep). The reluctant affirmers: Heding in values affirmations
+
+Riddle, T.A. (in prep). A linguistic exploration of how scientists communicate science.
 
 #### Published
 Riddle, T.A., Lau, H., Sparrow, B.  (2015).  Reporting on the temporal properties of visual events masked with continuous flash suppression. Consciousness & Cognition, 36, 154-168. \[[osf](https://osf.io/ehd7a/)\]
 
 Riddle, T.A., Bhagavatula, S., Guo, W., Muresan, S., Cohen, G., Cook, J. & Purdie-Vaughns, V.  (2015).  Mining a written values affirmation to identify the unique linguistic features of stigmatized groups.  In Proceedings of the 8th international Conference on Educational Data Mining.  International Educational Data Mining Society. \[[pdf](/../docs/edm_2015.pdf)\]
 
-Riddle, T.A., Rosen, H.J., & Morsella, E. (In press).  Is that me? Sense of agency as a function of intra-psychic conflict.  Journal of Mind and Behavior	
+Riddle, T.A., Rosen, H.J., & Morsella, E. (2015).  Is that me? Sense of agency as a function of intra-psychic conflict.  Journal of Mind and Behavior, 36, 27-46.
 
 Morsella, E., Lynn, M.T., & Riddle, T.A.  (2013).  Illusion of voluntary action.  In H. Pashler (Ed.), The encyclopedia of the mind.  Thousand Oaks, CA:  Sage.
 
@@ -27,6 +31,8 @@ Lynn, M.T., Berger, C.C., Riddle, T.A., Morsella, E.  (2010).  Mind control?  Cr
 Morsella, E., Riddle, T.A., & Bargh, J.A. (2009).  Undermining the foundations:  Questioning the basic notions of associationism and mental representation.  Behavioral and Brain Sciences, 32, 218-219.
 
 #### Talks
+Stanford University, PIES talk series, February 2016<br>
+Society for Personality and Social Psychology, February 2016<br>
 Association for Psychological Science, May 2015<br>
 Princeton University, Four Colleges Conference, May 2013<br>
 New York University, Balcetis Lab, April 2012<br>

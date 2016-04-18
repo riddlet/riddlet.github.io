@@ -3,16 +3,16 @@ layout: default
 title: Travis Riddle
 permalink: /research/
 ---
-Broadly, I'm interested in applying computational approaches to social questions. My data come from lab studies, field studies, and web-based observational research.
+Broadly, I'm interested in applying computational approaches to social questions, especially those with a strong applied focus. My data come from lab studies, field studies, and web-based observational research.
 
-### How do people interact with their devices?
+### Reducing inequality through interventions
 
-Our digital devices are an increasingly a prominent part of our daily lives, to the point that we sometimes treat these tools as extensions of our selves. I've conducted basic research investigating properties about the relationship between us and our devices, including how we [demarcate internal representations]() into the self and not-the-self and measuring our [sensitivity to temporal](https://osf.io/ehd7a/) properties of dynamic displays.
+Historically, stigmatized groups have been disadvantaged in some important life domains. One branch of my work explores methods to reduce this inequality. Specifically, I've been exploring boundary conditions and mechanisms of a written intervention known as a values affirmation. The goal of this work is to use unify disparate datasets to better understand how the intervention works across diverse settings, and to use computational methods to find [linguistic features](docs/edm_2015.pdf) that can highlight why and for whom the intervention works.
 
-### Diversity in computation
+### Intergroup relations in the digital world
 
-Historically, computers have been built and used by predominantly wealthy, white males. Although this is changing, increasing the representation of women and minorities within STEM fields will ensure that these machines are built with a broad class of people in mind. To this end, I've been using computational techniques to mine the [content and structure](docs/edm_2015.pdf) of a written academic intervention known as a values-affirmation that has been shown to improve educational outcomes for women and minorities in STEM fields especially. The objective with this work is to show how and why this intervention works, and to use what we learn to attempt to improve the intervention or better target those who could benefit the most from it.
+The increase in the use of digital devices has changed the way we connect with each other. These machines have effectively become constant data-collection devices that reflect our social behavior. I'm developing a second line of research that leverages these societal changes to discover behavioral consequences of widely communicated stressful events. Using computational methods, I'm able to study phenomena that have been difficult or impossible to study with more traditional social psychological methodology.
 
-### Digital observational work
+### Communication of science
 
-Observational research has long been a key pillar of psychological work, but despite the amount of behavioral data documented digitally, psychologists have been slow to use this vast resource. Here, I am exploring specific aspects of social cognition as manifested digitally, with plans to leverage this work into robust, lab-based paradigms.
+The way in which we communicate our own work is of fundamental importance for our work, as well as for the perception of our work by outside parties. In a third line of work, I'm using the papers we produce as researchers as the basic unit of analysis. In this work, I'm exploring how we communicate our science, with an eye toward documenting how we communicate statistical results. What properties of our data do we highlight, and what parts do we neglect? When do we communicate confidence versus uncertainty? These questions take on increased importance given the current debates over the fundamentals of our research methodology.
