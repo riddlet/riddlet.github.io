@@ -118,7 +118,9 @@ model {
 }
 {% endhighlight %}
 
-We've switched to a centered parameterization. I had initially used the non-centered parameterization because in the manual and in the Stan users mailing list, the non-centered parameterization is supposed to help with hierarchical models. However, it turns out that in this case, using the centered parameterization improves the speed substantially, running in under a minute. We also don't see any of those pesky warning messages. The estimates are right in line with what's expected too (*M* = 2.74, credibility interval = 2.68-2.79). Because this model is dead-simple, I can also give rstanarm a whirl to see what it does with these data. 
+I've switched to a centered parameterization. I had initially used the non-centered parameterization because in the manual and in the Stan users mailing list, the non-centered parameterization is supposed to help with hierarchical models. However, it turns out that in this case, using the centered parameterization improves the speed substantially, running in under a minute. We also don't see any of those pesky warning messages. The estimates are right in line with what's expected too (*M* = 2.74, credibility interval = 2.68-2.79). Why is the centered parameterization better here? Bob Carpenter has a good writeup of this [here](http://mc-stan.org/documentation/case-studies/pool-binary-trials.html), but I suspect that this is because I have a good amount of data. There are 900 "groups' here that I'm estimating underneath the overall mean `mu`. If there were, say, 4 groups, then the non-centered might be preferable.
+
+Because this model is dead-simple, I can also give rstanarm a whirl to see what it does with these data. 
 
 {% highlight r %}
 m.rstanarm <- stan_glmer(overallgpa_qtr ~ 1 + (1|ID), data=df.mod, prior_intercept=normal(0,1))
@@ -132,4 +134,4 @@ I've manually specified the prior on the intercept to make it a bit more equival
 
 **Figure 2: Mass-produced model**
 
-There's nothing else fishy going on with my model either. At least, none that I've found. I should point out that this business about artisinal vs. mass-produced is done in jest. Clearly Stan and the affiliated products and packages are an incredible research tool, and we're lucky to have people who have worked so hard on them. To be honest, I'm surprised that what I've coded can stack up against what these folks have produced. Next step is to scale it up to something a little more interesting.
+There's nothing else fishy going on with my model either. At least, none that I've found. I should point out that this business about artisinal vs. mass-produced is done in jest. Clearly Stan and the affiliated products and packages are an incredible research tool, and we're lucky to have people who have worked so hard on them. To be honest, I'm surprised that what I've coded can stack up against what these folks have produced. Next step is to scale it up to something a little more interesting. 
