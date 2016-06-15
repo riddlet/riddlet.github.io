@@ -7,7 +7,7 @@ Broadly, I'm interested in applying computational approaches to social questions
 
 ### Reducing inequality through interventions
 
-Historically, stigmatized groups have been disadvantaged in some important life domains. One branch of my work explores methods to reduce this inequality. Specifically, I've been exploring boundary conditions and mechanisms of a written intervention known as a values affirmation. The goal of this work is to use unify disparate datasets to better understand how the intervention works across diverse settings, and to use computational methods to find [linguistic features](docs/edm_2015.pdf) that can highlight why and for whom the intervention works.
+Historically, stigmatized groups have been disadvantaged in some important life domains. One branch of my work explores methods to reduce this inequality. Specifically, I've been exploring boundary conditions and mechanisms of a written intervention known as a values affirmation. The goal of this work is to use unify disparate datasets to better understand how the intervention works across diverse settings, and to use computational methods to find [linguistic features](/docs/edm_2015.pdf) that can highlight why and for whom the intervention works.
 
 ### Intergroup relations in the digital world
 
