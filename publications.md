@@ -9,7 +9,7 @@ permalink: /publications/
 #### In preparation  
 Riddle, T.A., Muresan, S. Cook, J.E., Cohen, G., Garcia, J. & Purdie-Vaughns, V. (in prep). The surprising effectiveness of values affirmations
 
-Riddle, T.A., Muresan, S. Cook, J.E., Cohen, G., Garcia, J. & Purdie-Vaughns, V. (in prep). The reluctant affirmers: Heding in values affirmations
+Riddle, T.A., Muresan, S. Cook, J.E., Cohen, G., Garcia, J. & Purdie-Vaughns, V. (in prep). The reluctant affirmers: Hedging in values affirmations
 
 Riddle, T.A. (in prep). A linguistic exploration of how scientists communicate science.
 
