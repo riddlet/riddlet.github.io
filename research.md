@@ -5,13 +5,13 @@ permalink: /research/
 ---
 Broadly, I'm interested in applying computational approaches to social questions, especially those with a strong applied focus. My data come from lab studies, field studies, and web-based observational research.
 
-### Reducing inequality through interventions
-
-Historically, stigmatized groups have been disadvantaged in some important life domains. One branch of my work explores methods to reduce this inequality. Specifically, I've been exploring boundary conditions and mechanisms of a written intervention known as a values affirmation. The goal of this work is to use unify disparate datasets to better understand how the intervention works across diverse settings, and to use computational methods to find [linguistic features](/docs/edm_2015.pdf) that can highlight why and for whom the intervention works.
-
 ### Intergroup relations in the digital world
 
 The increase in the use of digital devices has changed the way we connect with each other. These machines have effectively become constant data-collection devices that reflect our social behavior. I'm developing a second line of research that leverages these societal changes to discover behavioral consequences of widely communicated stressful events. Using computational methods, I'm able to study phenomena that have been difficult or impossible to study with more traditional social psychological methodology.
+
+### Reducing inequality through interventions
+
+Historically, stigmatized groups have been disadvantaged in some important life domains. One branch of my work explores methods to reduce this inequality. Specifically, I've been exploring boundary conditions and mechanisms of a written intervention known as a values affirmation. The goal of this work is to use unify disparate datasets to better understand how the intervention works across diverse settings, and to use computational methods to find [linguistic features](/docs/edm_2015.pdf) that can highlight why and for whom the intervention works.
 
 ### Communication of science
 
