@@ -6,12 +6,13 @@ permalink: /publications/
 
 ### Manuscripts  
 
-#### In preparation  
-Turetsky, K. & Riddle, T.A. (submitted). Porous chambers, valenced echoes: A network analysis of online news coverage interconnectedness following a nationally polarizing race-related event
+#### In preparation & under review  
+Turetsky, K. & Riddle, T.A. (under review). Porous chambers, valenced echoes: A network analysis of online news coverage interconnectedness following a nationally polarizing race-related event
 
-Riddle, T.A., Mohandoss, V., Muresan, S. Cook, J.E., Cohen, G., & Purdie-Vaughns, V. (under review). Interpreting LSTM networks using behavioral psychology methods
+Riddle, T.A., Turetsky, K., Cohen, G. Cook, J.E., & Purdie-Vaughns, V. (In prep). What linguistic features are associated with benefits in values affirmations?
 
-Riddle, T.A. (in prep). Linguistic contextualizers of certainty are associated with statistical reporting errors and statistical overfitting.
+#### Preprints
+Riddle, T. (2017). Linguistic overfitting in empirical psychology. [osf](osf.io/preprints/psyarxiv/qasde)
 
 #### Published
 Riddle, T.A., Bhagavatula, S., Guo, W., Muresan, S., Cohen, G., Cook, J. & Purdie-Vaughns, V.  (2015).  Mining a written values affirmation to identify the unique linguistic features of stigmatized groups.  In Proceedings of the 8th international Conference on Educational Data Mining.  International Educational Data Mining Society. \[[pdf](/../docs/edm_2015.pdf)\]
