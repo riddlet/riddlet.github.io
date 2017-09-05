@@ -10,7 +10,7 @@ permalink: /publications/
 Riddle, T.A., Turetsky, K., Cohen, G. Cook, J.E., & Purdie-Vaughns, V. (In prep). What linguistic features are associated with benefits in values affirmations?
 
 #### Preprints
-Riddle, T. (2017). Linguistic overfitting in empirical psychology. [osf](https://osf.io/preprints/psyarxiv/qasde/)
+Riddle, T. (2017). Linguistic overfitting in empirical psychology. \[[osf](https://osf.io/preprints/psyarxiv/qasde/)\]
 
 #### Published
 Turetsky, K. & Riddle, T.A. (In press). Porous chambers, echoes of valence and stereotypes: A network analysis of online news coverage interconnectedness following a nationally polarizing race-related event. Social Psychology and Personality Science
