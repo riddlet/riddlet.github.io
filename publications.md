@@ -31,15 +31,5 @@ Lynn, M.T., Berger, C.C., Riddle, T.A., Morsella, E.  (2010).  Mind control?  Cr
 
 Morsella, E., Riddle, T.A., & Bargh, J.A. (2009).  Undermining the foundations:  Questioning the basic notions of associationism and mental representation.  Behavioral and Brain Sciences, 32, 218-219.
 
-#### Talks
-Stanford University, PIES talk series, February 2016<br>
-Society for Personality and Social Psychology, February 2016<br>
-Association for Psychological Science, May 2015<br>
-Princeton University, Four Colleges Conference, May 2013<br>
-New York University, Balcetis Lab, April 2012<br>
-Yale University, Four Colleges Conference, April 2012<br>
-Columbia University, Social Snack, March 2012<br>
-Columbia University, Social Snack, May 2011<br>
-Columbia University, Social Snack, May 2010<br>
 
 
