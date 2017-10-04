@@ -7,7 +7,7 @@ I apply computational approaches to social questions. My data come from lab stud
 
 ### Intergroup relations in the digital world
 
-The increase in the use of digital devices has changed the way we connect with each other. These machines have effectively become constant data-collection devices that reflect our social behavior. I'm developing a second line of research that leverages these societal changes to discover behavioral consequences of widely communicated stressful events. Using computational methods, I'm able to study phenomena that have been difficult or impossible to study with more traditional social psychological methodology.
+The increase in the use of digital devices has changed the way we connect with each other and [the way we consume information](/docs/turetsky_riddle_inpress.pdf). Additionally, these machines have effectively become constant data-collection devices that reflect our social behavior. This line of research leverages these societal changes to discover behavioral consequences of widely communicated stressful events. Using computational methods, I'm able to study phenomena that have been difficult or impossible to study with more traditional social psychological methodology.
 
 ### Reducing inequality through interventions
 
