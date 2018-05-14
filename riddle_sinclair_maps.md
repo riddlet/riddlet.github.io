@@ -13,4 +13,4 @@ The maps below illustrate disciplinary gaps across counties. The gap is represen
 - [Law Enforcement Referrals](figs/maps/law_enforcement.html)
 - [Out-of-school Suspensions](figs/maps/oos_susp.html)
 
-All data is collected by the [United States Department of Educations](https://www2.ed.gov/about/offices/list/ocr/docs/crdc-2013-14.html)
+All data was collected by the [United States Department of Educations](https://www2.ed.gov/about/offices/list/ocr/docs/crdc-2013-14.html)
