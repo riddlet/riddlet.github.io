@@ -4,6 +4,11 @@ title: Travis Riddle
 permalink: /publications/
 ---
 
+### under review
+Riddle, T.A. & Sinclair, S. (under review). Race-based disparities in academic disciplinary actions are associated with county-level rates of racial bias \[[disciplinary maps](/riddle_sinclair_maps)]
+
+Riddle, T.A., Sinclair, S., Starck, J., & Warikoo, N. (under review). Teachers are people too: Examining the racial bias of teachers compared to other American adults
+
 ### Manuscripts  
 Turetsky, K. & Riddle, T.A. (2018). Porous chambers, valenced echoes: A network analysis of online news coverage interconnectedness following a nationally polarizing race-related event. Social Psycholgy and Personality Science. \[[pdf](/../docs/turetsky_riddle_inpress.pdf)]
 
