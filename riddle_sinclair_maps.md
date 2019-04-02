@@ -3,7 +3,7 @@ layout: default
 title: Travis Riddle
 ---
 
-This page hosts interactive disciplinary maps for a working paper on disciplinary disparities (link forthcoming)
+This page hosts interactive disciplinary maps for Riddle & Sinclair (2019) [[pdf](https://osf.io/vy732/)]
 
 The maps below illustrate disciplinary gaps across counties. The gap is represented by a relative risk ratio. This number is the proportion of black students disciplined divided by the proportion of white students suspended. As such, a value of one is parity, values greater than one indicate that black students are disciplined at higher rates. In counties where the proportion for white and black students are zero, the relative risk ratio is technically undefined (i.e. 0/0), but I've coded it as one for the purposes of visualization. Additionally, any county with either zero black students or zero white students enrolled is not represented, and hence left white.
 
