@@ -10,7 +10,7 @@ Riddle, T.A. & Sinclair, S. (2019). Racial disparities in school-based disciplin
 
 Turetsky, K. & Riddle, T.A. (2018). Porous chambers, valenced echoes: A network analysis of online news coverage interconnectedness following a nationally polarizing race-related event. Social Psycholgy and Personality Science. \[[pdf](/../docs/turetsky_riddle_inpress.pdf)]
 
-Riddle, T. (2017). Linguistic overfitting in empirical psychology. \[[psyarxiv](osf.io/preprints/psyarxiv/qasde)\]
+Riddle, T. (2017). Linguistic overfitting in empirical psychology. \[[psyarxiv](https://osf.io/preprints/psyarxiv/qasde)\]
 
 Riddle, T.A., Bhagavatula, S., Guo, W., Muresan, S., Cohen, G., Cook, J. & Purdie-Vaughns, V.  (2015).  Mining a written values affirmation to identify the unique linguistic features of stigmatized groups.  In Proceedings of the 8th international Conference on Educational Data Mining.  International Educational Data Mining Society. \[[pdf](/../docs/edm_2015.pdf)\]
 
