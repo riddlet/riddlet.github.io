@@ -3,4 +3,4 @@ layout: default
 title: Travis Riddle
 ---
 
-I'm a postdoc at Princeton University working in the Psychology department. I study how one’s social identity is associated with markers of education, health, and well-being. I use large administrative, web-scale observational data in combination with behavioral and field experiments to understand the sources and consequences of group disparities.
+I'm a staff scientist the [National Institute of Mental Health](https://www.nimh.nih.gov/index.shtml) working on the [data science and sharing team](https://cmn.nimh.nih.gov/dsst.html). I'm interested in using my quantitative and computational skills on problems that are meaningful, impactful, and difficult.

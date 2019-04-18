@@ -3,11 +3,11 @@ layout: default
 title: Travis Riddle
 permalink: /research/
 ---
-I apply computational approaches to social questions. My data come from lab studies, field studies, web-based observational research, and large administrative datasets.
+In my independent research, I apply computational approaches to social questions. My data come from lab studies, field studies, web-based observational research, and large administrative datasets. 
 
 ### Ambient stressors
 
-There exist some set of stimuli in the environment that serve as ambient reminders of the marginalized status of one's group. In this line of work, I'm measuring the degree to [which an environment is saturated with these cues](/docs/turetsky_riddle_inpress.pdf), and assessing the [downstream consequences of exposure to these cues](/riddle_sinclair_maps/). Forthcoming work examines how a specific, acute event is associated with changes in health and well-being for focal groups, and how information from these environmental cues spreads through online communities.
+There exist some set of stimuli in the environment that serve as ambient reminders of the marginalized status of one's group. In this line of work, I'm measuring the degree to [which an environment is saturated with these cues](/docs/turetsky_riddle_inpress.pdf), and assessing the [downstream consequences of exposure to these cues](https://osf.io/vy732/). Forthcoming work examines how a specific, acute event is associated with changes in health and well-being for focal groups, and how information from these environmental cues spreads through online communities.
 
 ### Understanding values affirmation
 
